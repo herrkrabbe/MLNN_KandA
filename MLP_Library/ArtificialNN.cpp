@@ -1,7 +1,9 @@
 #include "ArtificialNN.h"
 
+#include "RNG.h"
+
 ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLayer, int numberNeuronHiddenLayer,
-	int OutputLearningRate, double learningRate, ACTIVATION_FUNCTION af_HiddenLayer, ACTIVATION_FUNCTION af_OutputLayer)
+                           int OutputLearningRate, double learningRate, ACTIVATION_FUNCTION af_HiddenLayer, ACTIVATION_FUNCTION af_OutputLayer)
 {
 	numInputs = numberInput;
 	numOutputs = numberOutput;
@@ -12,6 +14,16 @@ ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLa
 
 	activationFunctionHiddenLayer = std::vector<ACTIVATION_FUNCTION>(numberHiddenLayer, af_HiddenLayer);
 	activationFunctionOutputLayer = af_OutputLayer;
+
+	for (int n = 0; n < numberNeuronHiddenLayer; n++)
+	{
+		for (int l = 0; l < numberHiddenLayer; l++)
+		{
+			weights[l * numberNeuronHiddenLayer + n] = RNG::GetNumber();
+		}
+		//One bias per neuron
+		biases[n] = RNG::GetNumber();
+	}
 }
 
 ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLayer,
@@ -23,8 +35,16 @@ ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLa
 	numNPerHidden = numberNeuronPerHiddenLayer;
 
 	learningRateOutput = OutputLearningRate;
-	learningRatePerHidden = learningRatePerHidden;
+	learningRatePerHidden = learningRatePerHiddenLayer;
 
 	activationFunctionHiddenLayer = af_PerHiddenLayer;
 	activationFunctionOutputLayer = af_OutputLayer;
 }
+
+std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::vector<double> desiredOutput)
+{
+
+	return std::vector<double>(numOutputs, 0 );
+}
+
+

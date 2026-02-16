@@ -19,6 +19,9 @@ public:
 		, LEAKY_RELU
 	};
 
+	std::vector<double> weights;
+	std::vector<double> biases;
+
 	int numInputs;
 	int numOutputs;
 	//int numHidden;		Instead use		=>	 numNPerHidden.size()
@@ -38,7 +41,7 @@ public:
 		int OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
 		std::vector<ACTIVATION_FUNCTION> af_PerHiddenLayer, ACTIVATION_FUNCTION af_OutputLayer);
 
-	~ArtificialNN();
+	~ArtificialNN() = default;
 
 	//Train method is to compute the output + update weight
 	std::vector<double> Train(std::vector<double> inputValues, std::vector<double> desiredOutput);
