@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "NetworkLayer.h"
 /**
  *
  */
@@ -22,15 +21,22 @@ public:
 
 	int numInputs;
 	int numOutputs;
-	int numHidden;
-	int numNPerHidden;
-	double learningRate;
+	//int numHidden;		Instead use		=>	 numNPerHidden.size()
+	std::vector<int> numNPerHidden;
 
-	std::vector<std::shared_ptr<NetworkLayer>> layers;
+	std::vector<double> learningRate;
+	std::vector<double> learningRatePerHidden;
 
+	//Identical layer amount variant
 	ArtificialNN(int numberInput, int numberOutput,
 		int numberHiddenLayer, int numberNeuronPerHideenLayer, double learningRate,
 		ACTIVATION_FUNCTION af_HiddenLayer, ACTIVATION_FUNCTION af_OutputLayer);
+
+	//Varied Neurons per hidden layer variant
+	ArtificialNN(int numberInput, int numberOutput,
+		int numberHiddenLayer, std::vector<int> numberNeuronPerHiddenLayer, int OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
+		ACTIVATION_FUNCTION af_HiddenLayer, ACTIVATION_FUNCTION af_OutputLayer);
+
 	~ArtificialNN();
 
 	//Train method is to compute the output + update weight
