@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MLP_Library\NetworkLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MLP_Library\ArtificialNN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MLP_Library\NetworkLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MLP_Library\ArtificialNN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
