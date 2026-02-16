@@ -131,9 +131,9 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MLP_Library\ArtificialNN.cpp" />
-    <ClCompile Include="MLP_Library\RNG.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActivationFunctions.h" />
     <ClInclude Include="MLP_Library\ArtificialNN.h" />
     <ClInclude Include="MLP_Library\RNG.h" />
   </ItemGroup>

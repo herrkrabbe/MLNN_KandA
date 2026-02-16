@@ -21,15 +21,15 @@
     <ClCompile Include="MLP_Library\ArtificialNN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MLP_Library\RNG.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MLP_Library\ArtificialNN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MLP_Library\RNG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
