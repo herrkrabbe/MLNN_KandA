@@ -132,13 +132,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MLP_Library\ArtificialNN.cpp" />
     <ClCompile Include="MLP_Library\NetworkLayer.cpp" />
-    <ClCompile Include="MLP_Library\Perceptron.cpp" />
     <ClCompile Include="MLP_Library\RNG.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MLP_Library\ArtificialNN.h" />
     <ClInclude Include="MLP_Library\NetworkLayer.h" />
-    <ClInclude Include="MLP_Library\Perceptron.h" />
     <ClInclude Include="MLP_Library\RNG.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
