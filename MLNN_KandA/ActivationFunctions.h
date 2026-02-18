@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <cassert>
 
 namespace MLNN_KandA
 {
@@ -109,6 +110,27 @@ namespace Math
 
 	}
 
+	inline double MSE(double const& a, double const& b)
+	{
+		return pow(a*b, 2.0);
+	}
+
+	double MSE(std::vector<double> a, std::vector<double> b)
+	{
+		bool rightSize = a.size() == b.size();
+		if(!rightSize)
+		{
+			std::cout << "WARNING: mean square error input vectors are different size" << std::endl;
+			throw;
+		}
+		
+		double mse{0.0};
+		for(int i{0}; i<a.size(); ++i)
+		{
+			mse += MSE(a[i], b[i]);
+		}
+		return mse;
+	}
 }
 }
 	
