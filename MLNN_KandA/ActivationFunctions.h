@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <cassert>
+#include <iostream>
 
 namespace MLNN_KandA
 {
@@ -120,7 +121,7 @@ namespace Math
 		bool rightSize = a.size() == b.size();
 		if(!rightSize)
 		{
-			std::cout << "WARNING: mean square error input vectors are different size" << std::endl;
+			std::cout << "WARNING: mean square error input vectors are different size" << "\n";
 			throw;
 		}
 		

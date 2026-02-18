@@ -2,82 +2,76 @@
 
 #include <string>
 #include <vector>
+#include "ActivationFunctions.h"
 
 /**
  *
  */
-
-class ArtificialNN
-{
-public:
-	enum ACTIVATION_FUNCTION
+namespace MLNN_KandA {
+	class ArtificialNN
 	{
-		BINARY_STEP
-		, SIGMOID
-		, TANH
-		, RELU
-		, LEAKY_RELU
+	public:
+
+		std::vector<double> weights;
+		std::vector<double> biases;
+
+		int numInputs;
+		int numOutputs;
+		//int numHidden;		Instead use		=>	 numNPerHidden.size()
+		std::vector<int> numNPerHidden;
+
+		double learningRateOutput;
+		std::vector<double> learningRatePerHidden;
+
+		//Identical layer amount variant
+		ArtificialNN(int numberInput, int numberOutput,
+			int numberHiddenLayer, int numberNeuronHiddenLayer, int OutputLearningRate, double learningRate,
+			Math::eActivationFunction af_HiddenLayer, Math::eActivationFunction af_OutputLayer);
+
+		//Varied Neurons per hidden layer variant
+		ArtificialNN(int numberInput, int numberOutput,
+			int numberHiddenLayer, std::vector<int> numberNeuronPerHiddenLayer,
+			int OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
+			std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer);
+
+		~ArtificialNN() = default;
+
+		//Train method is to compute the output + update weight
+		std::vector<double> Train(std::vector<double> inputValues, std::vector<double> desiredOutput);
+
+		//CalcOutput method is only to compute the output (without update weight for training)
+		std::vector<double> CalcOutput(std::vector<double> inputValues);
+
+		std::string PrintWeightsBias();
+
+		// Saves the weights and bias of the current network to a file (not implemented here)
+		void SaveWeightsBias();
+		// Loads the weights and bias of the current network from a file (not implemented here)
+		void LoadWeightsBias();
+
+	private:
+
+		std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
+		Math::eActivationFunction activationFunctionOutputLayer;
+
+		// perform backpropagation to update weights
+		void UpdateWeights(std::vector<double> outputs, std::vector<double> desiredOutput);
+
+
+		double ActivationFunctionH(double value);	//hidden layer
+		double ActivationFunctionO(double value);	//output layer
+
+		double Step(double value);
+
+		double TanH(double value);
+
+		double Sigmoid(double value);
+
+		double ReLU(double value);
+
+		double LeakyReLU(double value);
+
+		double Derivated_Activation_Function(Math::eActivationFunction af, double value);
+
 	};
-
-	std::vector<double> weights;
-	std::vector<double> biases;
-
-	int numInputs;
-	int numOutputs;
-	//int numHidden;		Instead use		=>	 numNPerHidden.size()
-	std::vector<int> numNPerHidden;
-
-	double learningRateOutput;
-	std::vector<double> learningRatePerHidden;
-
-	//Identical layer amount variant
-	ArtificialNN(int numberInput, int numberOutput,
-		int numberHiddenLayer, int numberNeuronHiddenLayer, int OutputLearningRate, double learningRate,
-		ACTIVATION_FUNCTION af_HiddenLayer, ACTIVATION_FUNCTION af_OutputLayer);
-
-	//Varied Neurons per hidden layer variant
-	ArtificialNN(int numberInput, int numberOutput,
-		int numberHiddenLayer, std::vector<int> numberNeuronPerHiddenLayer, 
-		int OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
-		std::vector<ACTIVATION_FUNCTION> af_PerHiddenLayer, ACTIVATION_FUNCTION af_OutputLayer);
-
-	~ArtificialNN() = default;
-
-	//Train method is to compute the output + update weight
-	std::vector<double> Train(std::vector<double> inputValues, std::vector<double> desiredOutput);
-
-	//CalcOutput method is only to compute the output (without update weight for training)
-	std::vector<double> CalcOutput(std::vector<double> inputValues);
-
-	std::string PrintWeightsBias();
-
-	// Saves the weights and bias of the current network to a file (not implemented here)
-	void SaveWeightsBias();
-	// Loads the weights and bias of the current network from a file (not implemented here)
-	void LoadWeightsBias();
-
-private:
-
-	std::vector<ACTIVATION_FUNCTION> activationFunctionHiddenLayer;
-	ACTIVATION_FUNCTION activationFunctionOutputLayer;
-
-	// perform backpropagation to update weights
-	void UpdateWeights(std::vector<double> outputs, std::vector<double> desiredOutput);
-
-
-	double ActivationFunctionH(double value);	//hidden layer
-	double ActivationFunctionO(double value);	//output layer
-
-	double Step(double value);
-
-	double TanH(double value);
-
-	double Sigmoid(double value);
-
-	double ReLU(double value);
-
-	double LeakyReLU(double value);
-
-	double Derivated_Activation_Function(ACTIVATION_FUNCTION af, double value);
-
-};
+}
