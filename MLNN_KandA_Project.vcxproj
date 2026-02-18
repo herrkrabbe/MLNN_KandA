@@ -130,10 +130,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MLNN_KandA\ActivationFunctions.cpp" />
     <ClCompile Include="MLNN_KandA\ArtificialNN.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ActivationFunctions.h" />
+    <ClInclude Include="MLNN_KandA\ActivationFunctions.h" />
     <ClInclude Include="MLNN_KandA\ArtificialNN.h" />
     <ClInclude Include="MLNN_KandA\RNG.h" />
   </ItemGroup>

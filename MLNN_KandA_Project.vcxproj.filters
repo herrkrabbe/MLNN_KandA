@@ -21,15 +21,18 @@
     <ClCompile Include="MLNN_KandA\ArtificialNN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MLNN_KandA\ActivationFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MLNN_KandA\ArtificialNN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MLNN_KandA\RNG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ActivationFunctions.h">
+    <ClInclude Include="MLNN_KandA\ActivationFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MLNN_KandA\ArtificialNN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
