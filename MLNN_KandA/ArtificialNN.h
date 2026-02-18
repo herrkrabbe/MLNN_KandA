@@ -51,6 +51,8 @@ namespace MLNN_KandA {
 
 	private:
 
+		int startPositionOutput;
+
 		std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
 		Math::eActivationFunction activationFunctionOutputLayer;
 
