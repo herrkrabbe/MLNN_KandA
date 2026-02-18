@@ -1,7 +1,5 @@
 #pragma once
 #include <cmath>
-#include <cassert>
-#include <iostream>
 #include <vector>
 
 namespace MLNN_KandA

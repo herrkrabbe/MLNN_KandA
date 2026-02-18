@@ -1,4 +1,6 @@
 #include "ActivationFunctions.h"
+#include <cassert>
+#include <iostream>
 
 double MLNN_KandA::Math::ActivationFunction(eActivationFunction const& f, double const& x)
 {
