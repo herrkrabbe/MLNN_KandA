@@ -18,15 +18,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MLP_Library\ArtificialNN.cpp">
+    <ClCompile Include="MLNN_KandA\ArtificialNN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MLP_Library\ArtificialNN.h">
+    <ClInclude Include="MLNN_KandA\ArtificialNN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MLP_Library\RNG.h">
+    <ClInclude Include="MLNN_KandA\RNG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ActivationFunctions.h">

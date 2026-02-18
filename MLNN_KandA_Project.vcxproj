@@ -72,7 +72,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Spillskolen\2026V AI\MLP_Library\ANN_KTAN\Include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Spillskolen\2026V AI\MLNN_KandA\ANN_KTAN\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,7 +110,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Spillskolen\2026V AI\MLP_Library\ANN_KTAN\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Spillskolen\2026V AI\MLNN_KandA\ANN_KTAN\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)ANN_KTAN\Library\ANN_KTAN.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -130,12 +130,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MLP_Library\ArtificialNN.cpp" />
+    <ClCompile Include="MLNN_KandA\ArtificialNN.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivationFunctions.h" />
-    <ClInclude Include="MLP_Library\ArtificialNN.h" />
-    <ClInclude Include="MLP_Library\RNG.h" />
+    <ClInclude Include="MLNN_KandA\ArtificialNN.h" />
+    <ClInclude Include="MLNN_KandA\RNG.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

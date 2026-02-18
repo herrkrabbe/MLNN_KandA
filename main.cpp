@@ -1,6 +1,6 @@
 #include <iostream>
-#include "MLP_Library/RNG.h"
-#include "ActivationFunctions.h"
+#include "MLNN_KandA/RNG.h"
+#include "MLNN_KandA/ActivationFunctions.h"
 
 int main()
 {

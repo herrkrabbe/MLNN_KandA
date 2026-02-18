@@ -1,7 +1,7 @@
 #include "ArtificialNN.h"
 
 #include "RNG.h"
-#include "../ActivationFunctions.h"
+#include "ActivationFunctions.h"
 
 ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLayer, int numberNeuronHiddenLayer,
                            int OutputLearningRate, double learningRate, ACTIVATION_FUNCTION af_HiddenLayer, ACTIVATION_FUNCTION af_OutputLayer)
@@ -74,7 +74,7 @@ std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::ve
 			//For each input, which means each previous neuron
 			for (int previousN = 0; previousN < numNPerHidden[l]; previousN++){
 				
-				double tempSum += (weights[l * neuronsPerHidden + previousN] * MLNN_KandA::Math::ActivationFunction(hiddenActivation, preActivation[(l - 1) * neuronsPerHidden + previousN]));
+				tempSum += (weights[l * neuronsPerHidden + previousN] * MLNN_KandA::Math::ActivationFunction(hiddenActivation, preActivation[(l - 1) * neuronsPerHidden + previousN]));
 				
 			}
 			tempSum += biases[l * neuronsPerHidden + n];
