@@ -73,5 +73,22 @@ namespace MLNN_KandA {
 
 		double Derivated_Activation_Function(Math::eActivationFunction af, double value);
 
+		//first hidden layer is layer = 0
+		static int GetHiddenLayerStartIndex(int layer, int const& numInputs, int const& numberNeuronHiddenLayer, int const& numberHiddenLayer)
+		{
+			if(layer <= 0)
+			{
+				return 0;
+			}
+			if(layer > numberHiddenLayer-1)
+			{
+				layer = numberHiddenLayer;
+			}
+			return numInputs * numberHiddenLayer + (layer-1)* numberNeuronHiddenLayer * numberNeuronHiddenLayer;
+		}
+		static inline int GetOutputLayerStartIndex(int const & numInputs, int const & numberNeuronHiddenLayer, int const & numberHiddenLayer)
+		{
+			return numInputs * numberNeuronHiddenLayer + (numberHiddenLayer - 1) * numberNeuronHiddenLayer * numberNeuronHiddenLayer;
+		}
 	};
 }
