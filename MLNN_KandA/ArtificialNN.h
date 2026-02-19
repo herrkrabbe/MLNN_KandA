@@ -15,23 +15,24 @@ namespace MLNN_KandA {
 		std::vector<double> weights;
 		std::vector<double> biases;
 
-		int numInputs;
-		int numOutputs;
+		size_t numInputs;
+		size_t numOutputs;
 		//int numHidden;		Instead use		=>	 numNPerHidden.size()
-		std::vector<int> numNPerHidden;
+		std::vector<size_t> numNPerHidden;
+		#define numHidden numNPerHidden.size()
 
 		double learningRateOutput;
 		std::vector<double> learningRatePerHidden;
 
 		//Identical layer amount variant
-		ArtificialNN(int numberInput, int numberOutput,
-			int numberHiddenLayer, int numberNeuronHiddenLayer, int OutputLearningRate, double learningRate,
+		ArtificialNN(size_t numberInput, size_t numberOutput,
+			size_t numberHiddenLayer, size_t numberNeuronHiddenLayer, double OutputLearningRate, double learningRate,
 			Math::eActivationFunction af_HiddenLayer, Math::eActivationFunction af_OutputLayer);
 
 		//Varied Neurons per hidden layer variant
-		ArtificialNN(int numberInput, int numberOutput,
-			std::vector<int> numberNeuronPerHiddenLayer,
-			int OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
+		ArtificialNN(size_t numberInput, size_t numberOutput,
+			std::vector<size_t> numberNeuronPerHiddenLayer,
+			double OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
 			std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer);
 
 		~ArtificialNN() = default;
@@ -50,8 +51,11 @@ namespace MLNN_KandA {
 		void LoadWeightsBias();
 
 	private:
-		std::vector<int> hiddenLayerStartIndex;
-		int startPositionOutput;
+		std::vector<size_t> weightHiddenLayerStartIndex;
+		size_t weightOutputStartIndex;
+
+		std::vector<size_t> biasHiddenLayerStartIndex;
+		size_t biasOutputStartIndex;
 
 		std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
 		Math::eActivationFunction activationFunctionOutputLayer;
@@ -62,22 +66,41 @@ namespace MLNN_KandA {
 		//first hidden layer is layer = 0
 
 		// zero indexed
-		int GetHiddenLayerStartIndex(int layerIndex)
+		size_t GetWeightHiddenLayerStartIndex(size_t layerIndex)
 		{
 			if (layerIndex <= 0)
 			{
 				return 0;
 			}
-			if (layerIndex > numNPerHidden.size() - 1)
+			if (layerIndex > weightHiddenLayerStartIndex.size() - 1)
 			{
-				layerIndex = numNPerHidden.size() - 1;
+				layerIndex = weightHiddenLayerStartIndex.size() - 1;
 			}
-			return hiddenLayerStartIndex.at(layerIndex);
+			return weightHiddenLayerStartIndex.at(layerIndex);
 		}
 
-		inline int GetOutputLayerStartIndex()
+		inline size_t GetWeightOutputStartIndex()
 		{
-			return startPositionOutput;
+			return weightOutputStartIndex;
+		}
+
+		//zero indexed
+		size_t GetBiasHiddenLayerStartIndex(size_t layerIndex)
+		{
+			if (layerIndex <= 0)
+			{
+				return 0;
+			}
+			if (layerIndex > biasHiddenLayerStartIndex.size() - 1)
+			{
+				layerIndex = biasHiddenLayerStartIndex.size() - 1;
+			}
+			return biasHiddenLayerStartIndex.at(layerIndex);
+		}
+
+		inline size_t GetBiasOutputStartIndex()
+		{
+			return biasOutputStartIndex;
 		}
 	};
 }
