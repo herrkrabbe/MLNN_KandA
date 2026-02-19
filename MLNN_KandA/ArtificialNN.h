@@ -30,7 +30,7 @@ namespace MLNN_KandA {
 
 		//Varied Neurons per hidden layer variant
 		ArtificialNN(int numberInput, int numberOutput,
-			int numberHiddenLayer, std::vector<int> numberNeuronPerHiddenLayer,
+			std::vector<int> numberNeuronPerHiddenLayer,
 			int OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
 			std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer);
 
@@ -50,7 +50,7 @@ namespace MLNN_KandA {
 		void LoadWeightsBias();
 
 	private:
-
+		std::vector<int> hiddenLayerStartIndex;
 		int startPositionOutput;
 
 		std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
@@ -59,38 +59,25 @@ namespace MLNN_KandA {
 		// perform backpropagation to update weights
 		void UpdateWeights(std::vector<double> outputs, std::vector<double> desiredOutput);
 
-
-		double ActivationFunctionH(double value);	//hidden layer
-		double ActivationFunctionO(double value);	//output layer
-
-		double Step(double value);
-
-		double TanH(double value);
-
-		double Sigmoid(double value);
-
-		double ReLU(double value);
-
-		double LeakyReLU(double value);
-
-		double Derivated_Activation_Function(Math::eActivationFunction af, double value);
-
 		//first hidden layer is layer = 0
-		static int GetHiddenLayerStartIndex(int layer, int const& numInputs, int const& numberNeuronHiddenLayer, int const& numberHiddenLayer)
+
+		// zero indexed
+		int GetHiddenLayerStartIndex(int layerIndex)
 		{
-			if(layer <= 0)
+			if (layerIndex <= 0)
 			{
 				return 0;
 			}
-			if(layer > numberHiddenLayer-1)
+			if (layerIndex > numNPerHidden.size() - 1)
 			{
-				layer = numberHiddenLayer;
+				layerIndex = numNPerHidden.size() - 1;
 			}
-			return numInputs * numberHiddenLayer + (layer-1)* numberNeuronHiddenLayer * numberNeuronHiddenLayer;
+			return hiddenLayerStartIndex.at(layerIndex);
 		}
-		static inline int GetOutputLayerStartIndex(int const & numInputs, int const & numberNeuronHiddenLayer, int const & numberHiddenLayer)
+
+		inline int GetOutputLayerStartIndex()
 		{
-			return numInputs * numberNeuronHiddenLayer + (numberHiddenLayer - 1) * numberNeuronHiddenLayer * numberNeuronHiddenLayer;
+			return startPositionOutput;
 		}
 	};
 }

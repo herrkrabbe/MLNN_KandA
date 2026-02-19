@@ -49,9 +49,32 @@ ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLa
 		
 	}
 
+	
+	//setup layer start indices
+	for (int hLayer = 0; hLayer < numNPerHidden.size(); ++hLayer)
+	{
+		if (hLayer > 1)
+		{
+			hiddenLayerStartIndex.push_back(hiddenLayerStartIndex.at(hLayer - 1) + numNPerHidden.at(hLayer - 1) * numNPerHidden.at(hLayer - 2));
+		}
+		else if (hLayer == 1)
+		{
+			hiddenLayerStartIndex.push_back(numberInput * numNPerHidden.at(0));
+		}
+		else
+		{
+			hiddenLayerStartIndex.push_back(0);
+		}
+	}
+
 	//initializing output layer
 
-	startPositionOutput = numInputs * numberNeuronHiddenLayer + (numberHiddenLayer - 1) * numberNeuronHiddenLayer * numberNeuronHiddenLayer;
+		//OLD kittel code. replaced with new more readable approach
+		// startPositionOutput = numInputs * numberNeuronHiddenLayer + (numberHiddenLayer - 1) * numberNeuronHiddenLayer * numberNeuronHiddenLayer;
+	startPositionOutput =
+		hiddenLayerStartIndex.back()
+		+ hiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 1))
+		* hiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 2));
 
 	//For each output
 	for (int o = 0; 0 < numOutputs; o++)
@@ -66,7 +89,7 @@ ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLa
 	}
 }
 
-ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLayer,
+ArtificialNN::ArtificialNN(int numberInput, int numberOutput,
 	std::vector<int> numberNeuronPerHiddenLayer, int OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
 	std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer)
 {
@@ -79,6 +102,27 @@ ArtificialNN::ArtificialNN(int numberInput, int numberOutput, int numberHiddenLa
 
 	activationFunctionHiddenLayer = af_PerHiddenLayer;
 	activationFunctionOutputLayer = af_OutputLayer;
+
+	//setup layer start indices
+	for( int hLayer = 0; hLayer < numNPerHidden.size(); ++hLayer)
+	{
+		if(hLayer > 1)
+		{
+			hiddenLayerStartIndex.push_back(hiddenLayerStartIndex.at(hLayer - 1) + numNPerHidden.at(hLayer - 1) * numNPerHidden.at(hLayer - 2));
+		}
+		else if ( hLayer == 1)
+		{
+			hiddenLayerStartIndex.push_back(numberInput * numNPerHidden.at(0));
+		}
+		else
+		{
+			hiddenLayerStartIndex.push_back(0);
+		}
+	}
+	startPositionOutput = 
+		hiddenLayerStartIndex.back()
+		+ hiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 1))
+		* hiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 2));
 }
 
 std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::vector<double> desiredOutput)
