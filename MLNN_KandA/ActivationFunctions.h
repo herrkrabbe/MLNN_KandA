@@ -64,6 +64,11 @@ namespace Math
 
 	double DerivedFunction(eActivationFunction const& f, double const& x);
 
+	inline double ActivateThenDerive(eActivationFunction const& f, double const& x)
+	{
+		return DerivedFunction(f, ActivationFunction(f, x));
+	}
+
 	inline double MSE(double const& a, double const& b)
 	{
 		return pow(a*b, 2.0);
