@@ -347,14 +347,59 @@ std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::ve
 	}
 	//Output achieved
 
-	//Comparing output to desired output
+
+	std::vector<double> errorGradient(biases.size(), 0.0);
+	//calculate error gradient for output
 	for (size_t o = 0; o < numOutputs; o++)
 	{
-		double error = desiredOutput[o] - Math::ActivationFunction(activationFunctionOutputLayer,
-			preActivation[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden + o]);
+		size_t outputIndex = GetBiasOutputStartIndex()+o;
+		double calculatedOutput = ActivationFunction(activationFunctionOutputLayer, preActivation[outputIndex]);
+		double errorDifference = desiredOutput[o] - calculatedOutput;
+		double outputErrorGadient = errorDifference * DerivedFunction(activationFunctionOutputLayer, calculatedOutput);
+		errorGradient[outputIndex] = outputErrorGadient;
 	}
 
+	//calculate error gradient for hidden layers
+	{
+		size_t l = numHidden - 1;
+		size_t numberOfNeurons = numNPerHidden[l];
+		for(size_t n = 0; n < numberOfNeurons; ++n)
+		{
+			size_t neuronIndex = GetBiasHiddenLayerStartIndex(l)+n;
+			for(size_t o = 0; o < numOutputs; ++o)
+			{
+				size_t outputIndex = GetBiasOutputStartIndex() + o;
+				double outputErrorGradient = errorGradient[outputIndex];
+				size_t weightIndex = GetWeightOutputStartIndex() + o * numNPerHidden.back() + n;
+				double weight = weights[weightIndex];
+				double errorGradientPart = weight * outputErrorGradient;
+				errorGradient[neuronIndex] += errorGradientPart;
+			}
+			errorGradient[neuronIndex] *= ActivateThenDerive(hiddenActivation, preActivation[neuronIndex]);
+		}
 
+	}
+
+	for(size_t l = numHidden-2; l >= 0; --l)
+	{
+		size_t nextLayer = l+1;
+		size_t numberOfNeurons = numNPerHidden[l];
+		for (size_t n = 0; n < numberOfNeurons; ++n)
+		{
+			size_t neuronIndex = GetBiasHiddenLayerStartIndex(l) + n;
+			for (size_t m = 0; m < numOutputs; ++m)
+			{
+				size_t nextLayerIndex = GetBiasHiddenLayerStartIndex(nextLayer) + m;
+				double nextLayerErrorGradient = errorGradient[nextLayerIndex];
+				size_t weightIndex = GetWeightHiddenLayerStartIndex(nextLayer) + m * numNPerHidden[l] + n;
+				//size_t weightIndex = GetWeightHiddenLayerStartIndex(l+1) + m * numNPerHidden.back() + n;
+				double weight = weights[weightIndex];
+				double errorGradientPart = weight * nextLayerErrorGradient;
+				errorGradient[neuronIndex] += errorGradientPart;
+			}
+			errorGradient[neuronIndex] *= ActivateThenDerive(hiddenActivation, preActivation[neuronIndex]);
+		}
+	}
 
 
 	return std::vector<double>(numOutputs, 0);
