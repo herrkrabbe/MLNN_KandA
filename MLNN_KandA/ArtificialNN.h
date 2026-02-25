@@ -50,6 +50,8 @@ namespace MLNN_KandA {
 		// Loads the weights and bias of the current network from a file (not implemented here)
 		void LoadWeightsBias();
 
+		void PrintLayerIndices();
+
 	private:
 		std::vector<size_t> weightHiddenLayerStartIndex;
 		size_t weightOutputStartIndex;

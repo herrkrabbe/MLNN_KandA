@@ -2,6 +2,9 @@
 
 #include "RNG.h"
 #include "ActivationFunctions.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 
 using namespace	MLNN_KandA;
 
@@ -42,13 +45,27 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, size_t numbe
 
 		//OLD kittel code. replaced with new more readable approach
 		// weightOutputStartIndex = numInputs * numberNeuronHiddenLayer + (numberHiddenLayer - 1) * numberNeuronHiddenLayer * numberNeuronHiddenLayer;
-	weightOutputStartIndex =
-		weightHiddenLayerStartIndex.back()
-		+ weightHiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 1))
-		* weightHiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 2));
-	biasOutputStartIndex =
-		biasHiddenLayerStartIndex.back()
-		+ biasHiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 1));
+	{
+		size_t backIndex = weightHiddenLayerStartIndex.back();
+
+		size_t foo11 = numNPerHidden.size() - 1;
+		size_t foo12 = numNPerHidden.at(foo11);
+
+		size_t foo21 = numNPerHidden.size() - 2;
+		size_t foo22 = numNPerHidden.at(foo21);
+
+		size_t sizeOfLastLayer = foo12 * foo22;
+
+		weightOutputStartIndex =
+			backIndex
+			+ sizeOfLastLayer;
+	}
+	{
+		biasOutputStartIndex =
+			biasHiddenLayerStartIndex.back()
+			+ numNPerHidden.at(numNPerHidden.size() - 1);
+	}
+	
 
 	size_t weightsSize = weightOutputStartIndex + numberOutput * weightHiddenLayerStartIndex.back();
 	size_t biasesSize = biasOutputStartIndex + numberOutput;
@@ -149,13 +166,26 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput,
 			biasHiddenLayerStartIndex.push_back(0);
 		}
 	}
-	weightOutputStartIndex =
-		weightHiddenLayerStartIndex.back()
-		+ weightHiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 1))
-		* weightHiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 2));
-	biasOutputStartIndex =
-		biasHiddenLayerStartIndex.back()
-		+ biasHiddenLayerStartIndex.at(numNPerHidden.at(numNPerHidden.size() - 1));
+	{
+		size_t backIndex = weightHiddenLayerStartIndex.back();
+
+		size_t foo11 = numNPerHidden.size() - 1;
+		size_t foo12 = numNPerHidden.at(foo11);
+
+		size_t foo21 = numNPerHidden.size() - 2;
+		size_t foo22 = numNPerHidden.at(foo21);
+
+		size_t sizeOfLastLayer = foo12 * foo22;
+
+		weightOutputStartIndex =
+			backIndex
+			+ sizeOfLastLayer;
+	}
+	{
+		biasOutputStartIndex =
+			biasHiddenLayerStartIndex.back()
+			+ numNPerHidden.at(numNPerHidden.size() - 1);
+	}
 
 	size_t weightsSize = weightOutputStartIndex + numberOutput * weightHiddenLayerStartIndex.back();
 	size_t biasesSize = biasOutputStartIndex + numberOutput;
@@ -244,6 +274,17 @@ std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::ve
 
 
 	return std::vector<double>(numOutputs, 0 );
+}
+
+void MLNN_KandA::ArtificialNN::PrintLayerIndices()
+{
+	std::stringstream ss;
+	for(int i = 0; i < weightHiddenLayerStartIndex.size(); ++i)
+	{
+		ss << "Layer: " << i << ", Weight start index: " << GetWeightHiddenLayerStartIndex(i) << ", Bias start index: " << GetBiasHiddenLayerStartIndex(i) << std::endl;
+	}
+	ss << "Output weight index: " << GetWeightOutputStartIndex() << ", Output bias index: " << GetBiasOutputStartIndex() << std::endl;
+	std::cout << ss.str();
 }
 
 
