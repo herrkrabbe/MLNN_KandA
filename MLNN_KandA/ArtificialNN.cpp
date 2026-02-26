@@ -289,7 +289,7 @@ std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::ve
 	for (size_t i = 0; i < numNPerHidden[0]; i++)
 	{
 		double tempSum = 0;
-		for (size_t iV = 0; i < inputValues.size(); iV++)
+		for (size_t iV = 0; iV < inputValues.size(); iV++)
 		{
 			tempSum += weights[iV + i * numInputs] * iV;
 		}
@@ -380,8 +380,9 @@ std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::ve
 
 	}
 
-	for(size_t l = numHidden-2; l >= 0; --l)
+	for (size_t foo = 0; foo < numHidden - 2; ++foo)
 	{
+		size_t l = numHidden - 2 - foo;
 		size_t nextLayer = l+1;
 		size_t numberOfNeurons = numNPerHidden[l];
 		for (size_t n = 0; n < numberOfNeurons; ++n)
@@ -399,6 +400,65 @@ std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::ve
 			}
 			errorGradient[neuronIndex] *= ActivateThenDerive(hiddenActivation, preActivation[neuronIndex]);
 		}
+	}
+
+	//Updating Weights and biases
+	//First layer
+	for (size_t n = 0; n < numHidden; n++)
+	{
+		for (size_t iV = 0; iV < inputValues.size(); iV++)
+		{
+			weights[iV + n * numInputs] = (	weights[iV + n * numInputs] + learningRatePerHidden[n] * errorGradient[n] * inputValues[iV]);
+		}
+		biases[n] = biases[n] + learningRatePerHidden[n] * errorGradient[n];
+	}
+
+	//Hidden Layer
+	for (size_t l = 1; l < numNPerHidden.size(); l++)
+	{
+		size_t numNeuronsPrevious = numNPerHidden[l - 1];
+		//For each neuron in the layer
+		for (size_t n = 0; n < numNPerHidden[l]; ++n)
+		{
+			double tempSum = 0;
+			//For each input, which means each previous neuron
+			
+			for (size_t previousN = 0; previousN < numNeuronsPrevious; previousN++) {
+				//Jeg forstår ikke funksjonene dine, så jeg tror de er bugget/ikke komplett, bruker inntil videre hard logikk
+				//size_t weightOfPreviousN = GetWeightHiddenLayerStartIndex(l) + n * numNeuronsPrevious + previousN;
+				//size_t previousNeuronPreActivationIndex = GetBiasHiddenLayerStartIndex(l - 1) + previousN;
+
+				weights[(numInputs * neuronsPerHidden) + (l - 1) * neuronsPerHidden * neuronsPerHidden+ n * neuronsPerHidden + previousN]
+					= weights[(numInputs * neuronsPerHidden) + (l - 1) * neuronsPerHidden * neuronsPerHidden + n * neuronsPerHidden + previousN]
+					+ learningRatePerHidden[numInputs + (l-1) * neuronsPerHidden + n]
+					* errorGradient[l * neuronsPerHidden + n]
+					* Math::ActivationFunction(activationFunctionHiddenLayer[0], preActivation[l - 1 * neuronsPerHidden + previousN]);
+			}
+			biases[numInputs + (l - 1) * neuronsPerHidden + n]
+				= biases[numInputs + (l - 1) * neuronsPerHidden + n]
+				+ learningRatePerHidden[l * neuronsPerHidden + n] * errorGradient[l * neuronsPerHidden + n];
+		}
+	}
+
+	//Output Layer
+	for (size_t o = 0; o < numOutputs; o++)
+	{
+		
+		for (size_t n = 0; n < neuronsPerHidden; n++)
+		{
+			weights[weightOutputStartIndex + o * neuronsPerHidden + n]
+				= weights[weightOutputStartIndex + o * neuronsPerHidden + n]
+				+ learningRateOutput
+				* errorGradient[numNPerHidden.size() * neuronsPerHidden + o]
+				* Math::ActivationFunction(activationFunctionOutputLayer, preActivation[(numNPerHidden.size() - 1) * neuronsPerHidden + n]);
+		}
+		biases[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden + o]
+			= biases[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden + o]
+			+ learningRateOutput * errorGradient[numNPerHidden.size() * neuronsPerHidden + o];
+		
+		
+		
+		preActivation[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden + o];
 	}
 
 
