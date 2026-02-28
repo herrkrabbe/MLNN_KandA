@@ -62,8 +62,10 @@ namespace MLNN_KandA {
 		std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
 		Math::eActivationFunction activationFunctionOutputLayer;
 
+		std::vector<double> preActivation;
+
 		// perform backpropagation to update weights
-		void UpdateWeights(std::vector<double> outputs, std::vector<double> desiredOutput);
+		void UpdateWeights(std::vector<double> inputValues, std::vector<double> outputs, std::vector<double> desiredOutput);
 
 		//first hidden layer is layer = 0
 
