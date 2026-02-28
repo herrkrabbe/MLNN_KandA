@@ -283,7 +283,7 @@ std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::ve
 	//Assuming all hidden layers use the same activation functions
 	Math::eActivationFunction hiddenActivation = activationFunctionHiddenLayer[0];
 
-	std::vector<double> preActivation(numNPerHidden.size() * neuronsPerHidden);
+	std::vector<double> preActivation(numNPerHidden.size() * neuronsPerHidden+numOutputs);
 
 	// first input layer preactivation calculation
 	for (size_t i = 0; i < numNPerHidden[0]; i++)
