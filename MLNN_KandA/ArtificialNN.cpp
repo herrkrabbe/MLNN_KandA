@@ -10,15 +10,15 @@ using namespace	MLNN_KandA;
 
 ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, 
 	size_t numberHiddenLayer, size_t numberNeuronHiddenLayer,
-    double OutputLearningRate, double learningRate, 
+	double HiddenLearningRate, double OutputLearningRate,
 	Math::eActivationFunction af_HiddenLayer, 
 	Math::eActivationFunction af_OutputLayer)
 	:
 	// Set constant values
 	numInputs(numberInput)
 	, numOutputs(numberOutput)
+	, learningRatePerHidden(numberHiddenLayer, HiddenLearningRate)
 	, learningRateOutput(OutputLearningRate)
-	, learningRatePerHidden(numberHiddenLayer, learningRate)
 	, numNPerHidden(numberHiddenLayer, numberNeuronHiddenLayer)
 	, activationFunctionHiddenLayer(numberHiddenLayer, af_HiddenLayer)
 	, activationFunctionOutputLayer(af_OutputLayer)
@@ -27,15 +27,15 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput,
 }
 
 ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput,
-	std::vector<size_t> numberNeuronPerHiddenLayer, double OutputLearningRate, 
-	std::vector<double> learningRatePerHiddenLayer,
+	std::vector<size_t> numberNeuronPerHiddenLayer, 
+	std::vector<double> learningRatePerHiddenLayer, double OutputLearningRate,
 	std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer)
 	:
 	// Set constant values
 	numInputs(numberInput)
 	, numOutputs(numberOutput)
-	, learningRateOutput(OutputLearningRate)
 	, learningRatePerHidden(learningRatePerHiddenLayer)
+	, learningRateOutput(OutputLearningRate)
 	, numNPerHidden(numberNeuronPerHiddenLayer)
 	, activationFunctionHiddenLayer(af_PerHiddenLayer)
 	, activationFunctionOutputLayer(af_OutputLayer)

@@ -15,13 +15,13 @@ namespace MLNN_KandA {
 
 		//Identical layer amount variant
 		ArtificialNN(size_t numberInput, size_t numberOutput,
-			size_t numberHiddenLayer, size_t numberNeuronHiddenLayer, double OutputLearningRate, double learningRate,
+			size_t numberHiddenLayer, size_t numberNeuronHiddenLayer, double HiddenLearningRate, double OutputLearningRate,
 			Math::eActivationFunction af_HiddenLayer, Math::eActivationFunction af_OutputLayer);
 
 		//Varied Neurons per hidden layer variant
 		ArtificialNN(size_t numberInput, size_t numberOutput,
 			std::vector<size_t> numberNeuronPerHiddenLayer,
-			double OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
+			std::vector<double> learningRatePerHiddenLayer, double OutputLearningRate,
 			std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer);
 
 		~ArtificialNN() = default;

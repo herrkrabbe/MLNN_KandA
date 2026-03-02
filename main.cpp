@@ -9,8 +9,19 @@ int main()
 {
 	std::cout << "hello world" << std::endl;
 
-	MLNN_KandA::ArtificialNN foo(2, 1, 1, 4, 0.5, 0.5,
-		MLNN_KandA::Math::eActivationFunction::Sigmoid, MLNN_KandA::Math::eActivationFunction::Sigmoid);
+	size_t numInputs = 2;
+	size_t numOutputs = 1;
+	size_t numHiddenLayers = 1;
+	size_t numNeuronsInHiddenLayer = 2;
+	double outputLayerLearningRate = 0.1;
+	double hiddenLayerLearningRate = 0.1;
+	MLNN_KandA::Math::eActivationFunction hiddenActivationFunction = MLNN_KandA::Math::eActivationFunction::Sigmoid;
+	MLNN_KandA::Math::eActivationFunction outputActivationFunction = MLNN_KandA::Math::eActivationFunction::Sigmoid;
+
+
+	MLNN_KandA::ArtificialNN foo(numInputs, numOutputs, numHiddenLayers, numNeuronsInHiddenLayer
+		, outputLayerLearningRate, hiddenLayerLearningRate,
+		hiddenActivationFunction, outputActivationFunction);
 	foo.PrintLayerIndices();
 
 	std::vector<std::vector<double>> inputs
