@@ -41,10 +41,10 @@ namespace MLNN_KandA {
 	public:
 
 		//Train method is to compute the output + update weight
-		std::vector<double> Train(std::vector<double> inputValues, std::vector<double> desiredOutput);
+		std::vector<double> Train(std::vector<double> const & inputValues, std::vector<double> const& desiredOutput);
 
 		//CalcOutput method is only to compute the output (without update weight for training)
-		std::vector<double> CalcOutput(std::vector<double> inputValues);
+		std::vector<double> CalcOutput(std::vector<double> const & inputValues);
 
 		std::string PrintWeightsBias();
 
@@ -70,7 +70,7 @@ namespace MLNN_KandA {
 		std::vector<double> preActivation;
 
 		// perform backpropagation to update weights
-		void UpdateWeights(std::vector<double> inputValues, std::vector<double> outputs, std::vector<double> desiredOutput);
+		void UpdateWeights(std::vector<double> const & inputValues, std::vector<double> const & outputs, std::vector<double> const & desiredOutput);
 
 		//first hidden layer is layer = 0
 

@@ -51,12 +51,12 @@ void ArtificialNN::Init()
 
 		weightHiddenLayerStartIndex.push_back(0);
 		biasHiddenLayerStartIndex.push_back(0);
-		weightLayerSize[0] = numInputs * numNPerHidden.at(0);
+		weightLayerSize[0] = numInputs * numNPerHidden[0];
 		for (size_t hLayer = 1; hLayer < numNPerHidden.size(); ++hLayer)
 		{
 			size_t prevIndex = hLayer - 1;
-			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex.at(prevIndex) + GetWeightLayerSize(prevIndex));
-			biasHiddenLayerStartIndex.push_back(biasHiddenLayerStartIndex.at(prevIndex) + GetBiasLayerSize(prevIndex));
+			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex[prevIndex] + GetWeightLayerSize(prevIndex));
+			biasHiddenLayerStartIndex.push_back(biasHiddenLayerStartIndex[prevIndex] + GetBiasLayerSize(prevIndex));
 			weightLayerSize[hLayer] = numNPerHidden[prevIndex] * numNPerHidden[hLayer];
 		}
 	}
@@ -168,16 +168,16 @@ void ArtificialNN::Init()
 //	return std::vector<double>(numOutputs, 0 );
 //}
 
-std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::vector<double> desiredOutput)
+std::vector<double> ArtificialNN::Train(std::vector<double> const & inputValues, std::vector<double> const & desiredOutput)
 {
-	std::vector<double> output = CalcOutput(inputValues);
+	std::vector<double> const & output = CalcOutput(inputValues);
 	UpdateWeights(inputValues, output, desiredOutput);
 
 
 	return output;
 }
 
-std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> inputValues)
+std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> const &  inputValues)
 {
 	//Assuming all hidden layers have the same amount of neurons
 	size_t neuronsPerHidden = numNPerHidden[0];
@@ -263,7 +263,8 @@ void MLNN_KandA::ArtificialNN::PrintLayerIndices()
 	std::cout << ss.str();
 }
 
-void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> inputValues, std::vector<double> outputs, std::vector<double> desiredOutput)
+void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputValues, 
+	std::vector<double> const & outputs, std::vector<double> const & desiredOutput)
 {
 	//Assuming all hidden layers have the same amount of neurons
 	size_t neuronsPerHidden = numNPerHidden[0];
