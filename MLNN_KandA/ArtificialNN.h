@@ -12,17 +12,6 @@ namespace MLNN_KandA {
 	{
 	public:
 
-		std::vector<double> weights;
-		std::vector<double> biases;
-
-		const size_t numInputs;
-		const size_t numOutputs;
-		//int numHidden;		Instead use		=>	 numNPerHidden.size()
-		const std::vector<size_t> numNPerHidden;
-		#define numHidden numNPerHidden.size()
-
-		const double learningRateOutput;
-		const std::vector<double> learningRatePerHidden;
 
 		//Identical layer amount variant
 		ArtificialNN(size_t numberInput, size_t numberOutput,
@@ -56,12 +45,37 @@ namespace MLNN_KandA {
 		void PrintLayerIndices();
 
 	private:
+
+		std::vector<double> weights;
+		std::vector<double> biases;
+
+		const size_t numInputs;
+		const size_t numOutputs;
+		// number of neurons per hidden layer, where the index is the layer index
+		const std::vector<size_t> numNPerHidden;
+
+		//number of hidden layers
+		#define numHidden numNPerHidden.size()
+
+		//learning rate of output layer
+		const double learningRateOutput;
+		//learning rate of each hidden layer, where the index is the layer index
+		const std::vector<double> learningRatePerHidden;
+
+		//the start index for hidden layer weights in the weights vector
 		std::vector<size_t> weightHiddenLayerStartIndex;
+		//the start index for output layer weights in the weights vector
 		size_t weightOutputStartIndex;
 
+		//the start index for hidden layer bias in the biases vector
 		std::vector<size_t> biasHiddenLayerStartIndex;
+		//the start index for output layer bias in the biases vector
 		size_t biasOutputStartIndex;
 
+		/* The number of weights in each hidden layer and the output layer.
+		* Each index is the corresponding hidden layer's index
+		* The output layer is the .back() index
+		*/
 		std::vector<size_t> weightLayerSize;
 
 		const std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
