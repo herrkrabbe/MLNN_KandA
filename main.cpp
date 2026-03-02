@@ -13,7 +13,7 @@ int main()
 	double result = MLNN_KandA::Math::ActivationFunction(MLNN_KandA::Math::eActivationFunction::Identity, number);
 	std::cout << result << std::endl;
 
-	MLNN_KandA::ArtificialNN foo(2, 1, 2, 2, 1.0, 1.0,
+	MLNN_KandA::ArtificialNN foo(2, 1, 1, 2, 1.0, 1.0,
 		MLNN_KandA::Math::eActivationFunction::Sigmoid, MLNN_KandA::Math::eActivationFunction::Sigmoid);
 	foo.PrintLayerIndices();
 
