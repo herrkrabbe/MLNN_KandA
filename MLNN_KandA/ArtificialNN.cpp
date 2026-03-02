@@ -252,17 +252,6 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 	return outputs;
 }
 
-void MLNN_KandA::ArtificialNN::PrintLayerIndices()
-{
-	std::stringstream ss;
-	for(int i = 0; i < weightHiddenLayerStartIndex.size(); ++i)
-	{
-		ss << "Layer: " << i << ", Weight start index: " << GetWeightHiddenLayerStartIndex(i) << ", Bias start index: " << GetBiasHiddenLayerStartIndex(i) << std::endl;
-	}
-	ss << "Output weight index: " << GetWeightOutputStartIndex() << ", Output bias index: " << GetBiasOutputStartIndex() << std::endl;
-	std::cout << ss.str();
-}
-
 void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputValues, 
 	std::vector<double> const & outputs, std::vector<double> const & desiredOutput)
 {
@@ -397,6 +386,17 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 			+ learningRateOutput
 			* errorGradientValue;
 	}
+}
+
+void MLNN_KandA::ArtificialNN::PrintLayerIndices()
+{
+	std::stringstream ss;
+	for(int i = 0; i < weightHiddenLayerStartIndex.size(); ++i)
+	{
+		ss << "Layer: " << i << ", Weight start index: " << GetWeightHiddenLayerStartIndex(i) << ", Bias start index: " << GetBiasHiddenLayerStartIndex(i) << std::endl;
+	}
+	ss << "Output weight index: " << GetWeightOutputStartIndex() << ", Output bias index: " << GetBiasOutputStartIndex() << std::endl;
+	std::cout << ss.str();
 }
 
 
