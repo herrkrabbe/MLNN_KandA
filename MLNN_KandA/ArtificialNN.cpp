@@ -361,12 +361,14 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 	//Output Layer
 	for (size_t o = 0; o < numOutputs; o++)
 	{
+		size_t const finalLayerIndex = numHidden - 1;
 		size_t const biasIndex = GetBiasOutputStartIndex() + o;
 		double const & errorGradientValue = errorGradient[biasIndex];
-		for (size_t n = 0; n < numHidden; n++)
+
+		for (size_t n = 0; n < numNPerHidden.back(); n++)
 		{
-			size_t const weightIndex = weightOutputStartIndex + o * numHidden + n;
-			size_t const finalLayerIndex = numHidden-1;
+			size_t const weightIndex = weightOutputStartIndex + o * numNPerHidden.back() + n;
+			
 
 			size_t const preActivationIndex = GetBiasHiddenLayerStartIndex(finalLayerIndex) + n;
 			double const & preActivationValue = preActivation[preActivationIndex];
