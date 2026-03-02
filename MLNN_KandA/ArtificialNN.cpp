@@ -18,9 +18,9 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput,
 	numInputs(numberInput)
 	, numOutputs(numberOutput)
 	, learningRateOutput(OutputLearningRate)
-	, learningRatePerHidden(std::vector<double>(numberHiddenLayer, learningRate))
-	, numNPerHidden(std::vector<size_t>(numberHiddenLayer, numberNeuronHiddenLayer))
-	, activationFunctionHiddenLayer(std::vector<Math::eActivationFunction>(numberHiddenLayer, af_HiddenLayer))
+	, learningRatePerHidden(numberHiddenLayer, learningRate)
+	, numNPerHidden(numberHiddenLayer, numberNeuronHiddenLayer)
+	, activationFunctionHiddenLayer(numberHiddenLayer, af_HiddenLayer)
 	, activationFunctionOutputLayer(af_OutputLayer)
 {
 	Init();
@@ -77,21 +77,23 @@ void ArtificialNN::Init()
 			+ numNPerHidden.at(numHidden - 1);
 	}
 
-
-	size_t weightsSize = weightOutputStartIndex + numOutputs * numNPerHidden.back();
-	size_t biasesSize = biasOutputStartIndex + numOutputs;
-
-	weights.resize(weightsSize);
-	biases.resize(biasesSize);
-	preActivation.resize(biasesSize);
-
-	for (size_t i = 0; i < weightsSize; ++i)
+	//randomise initial weights and biases
 	{
-		weights[i] = RNG::GetNumber();
-	}
-	for (size_t i = 0; i < biasesSize; ++i)
-	{
-		biases[i] = RNG::GetNumber();
+		size_t weightsSize = weightOutputStartIndex + numOutputs * numNPerHidden.back();
+		size_t biasesSize = biasOutputStartIndex + numOutputs;
+
+		weights.resize(weightsSize);
+		biases.resize(biasesSize);
+		preActivation.resize(biasesSize, 0.0);
+
+		for (size_t i = 0; i < weightsSize; ++i)
+		{
+			weights[i] = RNG::GetNumber();
+		}
+		for (size_t i = 0; i < biasesSize; ++i)
+		{
+			biases[i] = RNG::GetNumber();
+		}
 	}
 }
 
@@ -179,8 +181,6 @@ std::vector<double> ArtificialNN::Train(std::vector<double> const & inputValues,
 
 std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> const &  inputValues)
 {
-	//Assuming all hidden layers have the same amount of neurons
-	size_t neuronsPerHidden = numNPerHidden[0];
 	//Assuming all hidden layers use the same activation functions
 	Math::eActivationFunction hiddenActivation = activationFunctionHiddenLayer[0];
 
@@ -190,9 +190,9 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 	for (size_t i = 0; i < numNPerHidden[0]; i++)
 	{
 		double tempSum = 0;
-		for (size_t iV = 0; iV < inputValues.size(); iV++)
+		for (size_t inputVal = 0; inputVal < inputValues.size(); inputVal++)
 		{
-			tempSum += weights[iV + i * numInputs] * iV;
+			tempSum += weights[inputVal + i * numInputs] * inputValues.at(inputVal);
 		}
 		tempSum += biases[i];
 

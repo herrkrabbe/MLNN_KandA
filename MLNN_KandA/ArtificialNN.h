@@ -70,7 +70,8 @@ namespace MLNN_KandA {
 		std::vector<double> preActivation;
 
 		// perform backpropagation to update weights
-		void UpdateWeights(std::vector<double> const & inputValues, std::vector<double> const & outputs, std::vector<double> const & desiredOutput);
+		void UpdateWeights(std::vector<double> const & inputValues, 
+			std::vector<double> const & outputs, std::vector<double> const & desiredOutput);
 
 		//first hidden layer is layer = 0
 
