@@ -187,7 +187,7 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 	// first input layer preactivation calculation
 	for (size_t i = 0; i < numNPerHidden[0]; i++)
 	{
-		double tempSum = 0;
+		double tempSum = 0.0;
 		for (size_t inputVal = 0; inputVal < inputValues.size(); inputVal++)
 		{
 			tempSum += weights[inputVal + i * numInputs] * inputValues.at(inputVal);
@@ -204,7 +204,7 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 		//For each neuron in the layer
 		for (size_t n = 0; n < numNPerHidden[l]; ++n)
 		{
-			double tempSum = 0;
+			double tempSum = 0.0;
 			//For each input, which means each previous neuron
 			size_t numNeuronsPrevious = numNPerHidden[l - 1];
 			for (size_t previousN = 0; previousN < numNeuronsPrevious; previousN++) {
@@ -224,11 +224,11 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 		}
 	}
 	//Finished calculating forward
-	std::vector<double> outputs(numOutputs);
+	std::vector<double> outputs(numOutputs, 0.0);
 
 	for (size_t o = 0; o < numOutputs; o++)
 	{
-		double tempSum = 0;
+		double tempSum = 0.0;
 		for (size_t n = 0; n < numNPerHidden.back(); n++)
 		{
 			size_t weightOfPreviousN = GetWeightOutputStartIndex() + o * numNPerHidden.back() + n;
@@ -331,9 +331,9 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 		//For each neuron in the layer
 		for (size_t n = 0; n < numNPerHidden[l]; ++n)
 		{
-			double tempSum = 0;
 			//For each input, which means each previous neuron
-			double& errorGradientValue = errorGradient[l * neuronsInLayer + n];
+			size_t const fooIndex = l * neuronsInLayer + n;
+			double& errorGradientValue = errorGradient[fooIndex];
 
 			for (size_t previousN = 0; previousN < numNeuronsPrevious; previousN++) {
 				//Jeg forstår ikke funksjonene dine, så jeg tror de er bugget/ikke komplett, bruker inntil videre hard logikk
@@ -361,26 +361,26 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 	//Output Layer
 	for (size_t o = 0; o < numOutputs; o++)
 	{
-		double& errorGradientValue = errorGradient[GetBiasOutputStartIndex() + o];
+		size_t const biasIndex = GetBiasOutputStartIndex() + o;
+		double const & errorGradientValue = errorGradient[biasIndex];
 		for (size_t n = 0; n < numNPerHidden.back(); n++)
 		{
-			size_t weightIndex = weightOutputStartIndex + o * numNPerHidden.back() + n;
-			double& weightCurrent = weights[weightIndex];
+			size_t const weightIndex = weightOutputStartIndex + o * numNPerHidden.back() + n;
 
-			double& preActivationValue = preActivation[(numNPerHidden.size() - 1) * numNPerHidden.back() + n];
+			double const preActivationIndex = (numNPerHidden.size() - 1) * numNPerHidden.back() + n;
+			double const & preActivationValue = preActivation[preActivationIndex];
 
-			double weightNew = weightCurrent
+			double const deltaWeight =
 				+ learningRateOutput
 				* errorGradientValue
 				* Math::ActivationFunction(activationFunctionOutputLayer, preActivationValue);
 
-			weights[weightIndex] = weightNew;
+			weights[weightIndex] += deltaWeight;
 		}
-		double& biasCurrent = biases[numInputs + (numNPerHidden.size() - 2) * numNPerHidden.back() + o];
+		
 
-		biases[numInputs + (numNPerHidden.size() - 2) * numNPerHidden.back() + o]
-			= biasCurrent
-			+ learningRateOutput
+		biases[biasIndex]
+			+= learningRateOutput
 			* errorGradientValue;
 	}
 }
