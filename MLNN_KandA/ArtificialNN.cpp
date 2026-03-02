@@ -174,11 +174,11 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 			tempSum += weights[weightOfPreviousN]
 				* Math::ActivationFunction(activationFunctionHiddenLayer.back(), preActivation[previousNeuronPreActivationIndex]);
 		}
+		size_t const preActivationIndex = GetBiasOutputStartIndex() + o;
+		tempSum += biases[preActivationIndex];
 
-		tempSum += biases[GetBiasOutputStartIndex() + o];
-
-		preActivation[GetBiasOutputStartIndex() + o] = tempSum;
-		outputs[o] = Math::ActivationFunction(activationFunctionOutputLayer, preActivation[GetBiasOutputStartIndex() + o]);
+		preActivation[preActivationIndex] = tempSum;
+		outputs[o] = Math::ActivationFunction(activationFunctionOutputLayer, preActivation[preActivationIndex]);
 	}
 	
 	return outputs;
@@ -192,9 +192,12 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 	for (size_t o = 0; o < numOutputs; o++)
 	{
 		size_t outputIndex = GetBiasOutputStartIndex() + o;
-		double calculatedOutput = ActivationFunction(activationFunctionOutputLayer, preActivation[outputIndex]);
+		double calculatedOutput = outputs[o];
 		double errorDifference = desiredOutput[o] - calculatedOutput;
-		double outputErrorGadient = errorDifference * DerivedFunction(activationFunctionOutputLayer, calculatedOutput);
+
+		double const & preActivationValue = preActivation[GetBiasOutputStartIndex()+o];
+
+		double outputErrorGadient = errorDifference * DerivedFunction(activationFunctionOutputLayer, preActivationValue);
 		errorGradient[outputIndex] = outputErrorGadient;
 	}
 
@@ -214,7 +217,7 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 				double const errorGradientPart = weight * outputErrorGradient;
 				errorGradient[neuronIndex] += errorGradientPart;
 			}
-			errorGradient[neuronIndex] *= ActivateThenDerive(activationFunctionHiddenLayer[lastLayer], preActivation[neuronIndex]);
+			errorGradient[neuronIndex] *= DerivedFunction(activationFunctionHiddenLayer[lastLayer], preActivation[neuronIndex]);
 		}
 
 	}
@@ -238,7 +241,7 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 					double const errorGradientPart = weight * nextLayerErrorGradient;
 					errorGradient[neuronIndex] += errorGradientPart;
 				}
-				errorGradient[neuronIndex] *= ActivateThenDerive(activationFunctionHiddenLayer[l], preActivation[neuronIndex]);
+				errorGradient[neuronIndex] *= DerivedFunction(activationFunctionHiddenLayer[l], preActivation[neuronIndex]);
 			}
 		}
 	}
