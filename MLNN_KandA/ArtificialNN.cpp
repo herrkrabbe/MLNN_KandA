@@ -96,87 +96,14 @@ void ArtificialNN::Init()
 
 		for (size_t i = 0; i < weightsSize; ++i)
 		{
-			weights[i] = RNG::GetNumber();
+			weights[i] = 0.0; //RNG::GetNumber();
 		}
 		for (size_t i = 0; i < biasesSize; ++i)
 		{
-			biases[i] = RNG::GetNumber();
+			biases[i] = 0.0; //RNG::GetNumber();
 		}
 	}
 }
-
-//std::vector<double> ArtificialNN::Train(std::vector<double> inputValues, std::vector<double> desiredOutput)
-//{
-//	//Assuming all hidden layers have the same amount of neurons
-//	size_t neuronsPerHidden = numNPerHidden[0];
-//	//Assuming all hidden layers use the same activation functions
-//	Math::eActivationFunction hiddenActivation = activationFunctionHiddenLayer[0];
-//
-//	std::vector<double> preActivation(numNPerHidden.size() * neuronsPerHidden);
-//
-//	for (size_t i = 0; i < neuronsPerHidden; i++)
-//	{
-//		double tempSum = 0;
-//		for (size_t iV = 0; i < inputValues.size(); iV++)
-//		{
-//			tempSum += weights[iV + i * numInputs] * iV;
-//		}
-//		tempSum += biases[i];
-//
-//		preActivation[i] = tempSum;
-//	}
-//
-//	//	l * neuronsPerHidden = firstLayerSize + (l-1) * neuronsPerHidden
-//
-//	for (size_t l = 1; l < numNPerHidden.size(); l++)
-//	{
-//		//For each neuron in the layer
-//		for (size_t n = 0; n < neuronsPerHidden; n++)
-//		{
-//			double tempSum = 0;
-//			//For each input, which means each previous neuron
-//			for (size_t previousN = 0; previousN < neuronsPerHidden; previousN++){
-//				
-//				tempSum +=
-//					weights[(numInputs * neuronsPerHidden) + (l-1) * neuronsPerHidden * neuronsPerHidden 
-//					+ n * neuronsPerHidden + previousN] 
-//					* Math::ActivationFunction(hiddenActivation, preActivation[numInputs + (l - 1) * neuronsPerHidden + previousN]);
-//				
-//			}
-//			tempSum += biases[numInputs + (l-1) * neuronsPerHidden + n];
-//
-//			preActivation[l * neuronsPerHidden + n] = tempSum;
-//		}
-//	}
-//	//Finished calculating forward
-//
-//	for(size_t o = 0; o < numOutputs; o++)
-//	{
-//		double tempSum = 0;
-//		for (size_t n = 0; n < neuronsPerHidden; n++)
-//		{
-//			tempSum += weights[weightOutputStartIndex + o * neuronsPerHidden + n]
-//				* Math::ActivationFunction(hiddenActivation, preActivation[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden] + n);
-//		}
-//
-//		tempSum += biases[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden + o];
-//
-//		preActivation[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden + o] = tempSum;
-//	}
-//	//Output achieved
-//
-//	//Comparing output to desired output
-//	for (size_t o = 0; o < numOutputs; o++)
-//	{
-//		double error = desiredOutput[o] - Math::ActivationFunction(activationFunctionOutputLayer, 
-//			preActivation[numInputs + (numNPerHidden.size() - 2) * neuronsPerHidden + o]);
-//	}
-//
-//
-//
-//
-//	return std::vector<double>(numOutputs, 0 );
-//}
 
 std::vector<double> ArtificialNN::Train(std::vector<double> const & inputValues, std::vector<double> const & desiredOutput)
 {
@@ -191,16 +118,17 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 {
 
 	// first input layer preactivation calculation
-	for (size_t i = 0; i < numNPerHidden[0]; i++)
+	for (size_t n = 0; n < numNPerHidden[0]; n++)
 	{
 		double tempSum = 0.0;
 		for (size_t inputIndex = 0; inputIndex < inputValues.size(); inputIndex++)
 		{
-			tempSum += weights[inputIndex + i * numInputs] * inputValues.at(inputIndex);
+			size_t const weightIndex = inputIndex + n * numInputs;
+			tempSum += weights[weightIndex] * inputValues.at(inputIndex);
 		}
-		tempSum += biases[i];
+		tempSum += biases[n];
 
-		preActivation[i] = tempSum;
+		preActivation[n] = tempSum;
 	}
 
 	//	l * neuronsPerHidden = firstLayerSize + (l-1) * neuronsPerHidden
@@ -219,12 +147,12 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 
 				tempSum +=
 					weights[weightOfPreviousN]
-					* Math::ActivationFunction(activationFunctionHiddenLayer[l], preActivation[previousNeuronPreActivationIndex]);
+					* Math::ActivationFunction(activationFunctionHiddenLayer[l-1], preActivation[previousNeuronPreActivationIndex]);
 
 			}
-			tempSum += biases[GetBiasHiddenLayerStartIndex(l)];
-
 			size_t preActivationIndex = GetBiasHiddenLayerStartIndex(l) + n;
+			tempSum += biases[preActivationIndex];
+
 
 			preActivation[preActivationIndex] = tempSum;
 		}
@@ -244,7 +172,7 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 
 
 			tempSum += weights[weightOfPreviousN]
-				* Math::ActivationFunction(activationFunctionOutputLayer, preActivation[previousNeuronPreActivationIndex]);
+				* Math::ActivationFunction(activationFunctionHiddenLayer.back(), preActivation[previousNeuronPreActivationIndex]);
 		}
 
 		tempSum += biases[GetBiasOutputStartIndex() + o];
