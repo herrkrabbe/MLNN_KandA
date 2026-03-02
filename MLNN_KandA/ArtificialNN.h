@@ -65,12 +65,12 @@ namespace MLNN_KandA {
 		//the start index for hidden layer weights in the weights vector
 		std::vector<size_t> weightHiddenLayerStartIndex;
 		//the start index for output layer weights in the weights vector
-		size_t weightOutputStartIndex;
+		size_t weightOutputStartIndex; // cache miss
 
 		//the start index for hidden layer bias in the biases vector
 		std::vector<size_t> biasHiddenLayerStartIndex;
 		//the start index for output layer bias in the biases vector
-		size_t biasOutputStartIndex;
+		size_t biasOutputStartIndex; // cache miss
 
 		/* The number of weights in each hidden layer and the output layer.
 		* Each index is the corresponding hidden layer's index
@@ -79,7 +79,7 @@ namespace MLNN_KandA {
 		std::vector<size_t> weightLayerSize;
 
 		const std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
-		const Math::eActivationFunction activationFunctionOutputLayer;
+		const Math::eActivationFunction activationFunctionOutputLayer; // cache miss
 
 		std::vector<double> preActivation;
 
