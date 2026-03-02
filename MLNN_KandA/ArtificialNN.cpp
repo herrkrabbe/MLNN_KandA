@@ -8,21 +8,20 @@
 
 using namespace	MLNN_KandA;
 
-ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, size_t numberHiddenLayer, size_t numberNeuronHiddenLayer,
-                           double OutputLearningRate, double learningRate, Math::eActivationFunction af_HiddenLayer, Math::eActivationFunction af_OutputLayer)
+ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, 
+	size_t numberHiddenLayer, size_t numberNeuronHiddenLayer,
+    double OutputLearningRate, double learningRate, 
+	Math::eActivationFunction af_HiddenLayer, 
+	Math::eActivationFunction af_OutputLayer)
+	:
+	numInputs(numberInput)
+	, numOutputs(numberOutput)
+	, learningRateOutput(OutputLearningRate)
+	, learningRatePerHidden(std::vector<double>(numberHiddenLayer, learningRate))
+	, numNPerHidden(std::vector<size_t>(numberHiddenLayer, numberNeuronHiddenLayer))
+	, activationFunctionHiddenLayer(std::vector<Math::eActivationFunction>(numberHiddenLayer, af_HiddenLayer))
+	, activationFunctionOutputLayer(af_OutputLayer)
 {
-	// store values
-	{
-		numInputs = numberInput;
-		numOutputs = numberOutput;
-		numNPerHidden = std::vector<size_t>(numberHiddenLayer, numberNeuronHiddenLayer);
-
-		learningRateOutput = OutputLearningRate;
-		learningRatePerHidden = std::vector<double>(numberHiddenLayer, learningRate);
-
-		activationFunctionHiddenLayer = std::vector<Math::eActivationFunction>(numberHiddenLayer, af_HiddenLayer);
-		activationFunctionOutputLayer = af_OutputLayer;
-	}
 	
 
 	//setup hidden layer start indices
@@ -35,12 +34,12 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, size_t numbe
 		for (size_t hLayer = 1; hLayer < numNPerHidden.size(); ++hLayer)
 		{
 			size_t prevIndex = hLayer - 1;
-			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex.at(prevIndex) + weightLayerSize[prevIndex]);
+			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex.at(prevIndex) + GetWeightLayerSize(prevIndex));
 			biasHiddenLayerStartIndex.push_back(biasHiddenLayerStartIndex.at(prevIndex) + GetBiasLayerSize(prevIndex));
 			weightLayerSize[hLayer] = numNPerHidden[prevIndex] * numNPerHidden[hLayer];
 		}
 	}
-	
+
 
 	//initializing output layer
 	{
@@ -63,7 +62,7 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, size_t numbe
 			biasHiddenLayerStartIndex.back()
 			+ numNPerHidden.at(numNPerHidden.size() - 1);
 	}
-	
+
 
 	size_t weightsSize = weightOutputStartIndex + numberOutput * weightHiddenLayerStartIndex.back();
 	size_t biasesSize = biasOutputStartIndex + numberOutput;
@@ -133,18 +132,18 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, size_t numbe
 }
 
 ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput,
-	std::vector<size_t> numberNeuronPerHiddenLayer, double OutputLearningRate, std::vector<double> learningRatePerHiddenLayer,
+	std::vector<size_t> numberNeuronPerHiddenLayer, double OutputLearningRate, 
+	std::vector<double> learningRatePerHiddenLayer,
 	std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer)
+	:
+	numInputs(numberInput)
+	, numOutputs(numberOutput)
+	, learningRateOutput(OutputLearningRate)
+	, learningRatePerHidden(learningRatePerHiddenLayer)
+	, numNPerHidden(numberNeuronPerHiddenLayer)
+	, activationFunctionHiddenLayer(af_PerHiddenLayer)
+	, activationFunctionOutputLayer(af_OutputLayer)
 {
-	numInputs = numberInput;
-	numOutputs = numberOutput;
-	numNPerHidden = numberNeuronPerHiddenLayer;
-
-	learningRateOutput = OutputLearningRate;
-	learningRatePerHidden = learningRatePerHiddenLayer;
-
-	activationFunctionHiddenLayer = af_PerHiddenLayer;
-	activationFunctionOutputLayer = af_OutputLayer;
 
 	//setup hidden layer start indices
 	for (size_t hLayer = 0; hLayer < numNPerHidden.size(); ++hLayer)
@@ -194,6 +193,65 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput,
 	preActivation.resize(biasesSize);
 
 	for(size_t i=0; i < weightsSize; ++i)
+	{
+		weights[i] = RNG::GetNumber();
+	}
+	for (size_t i = 0; i < biasesSize; ++i)
+	{
+		biases[i] = RNG::GetNumber();
+	}
+}
+
+void ArtificialNN::Init()
+{
+	//setup hidden layer start indices
+	{
+		weightLayerSize.resize(numHidden + 1); // resize to 1 index per layer + 1 for output
+
+		weightHiddenLayerStartIndex.push_back(0);
+		biasHiddenLayerStartIndex.push_back(0);
+		weightLayerSize[0] = numInputs * numNPerHidden.at(0);
+		for (size_t hLayer = 1; hLayer < numNPerHidden.size(); ++hLayer)
+		{
+			size_t prevIndex = hLayer - 1;
+			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex.at(prevIndex) + GetWeightLayerSize(prevIndex));
+			biasHiddenLayerStartIndex.push_back(biasHiddenLayerStartIndex.at(prevIndex) + GetBiasLayerSize(prevIndex));
+			weightLayerSize[hLayer] = numNPerHidden[prevIndex] * numNPerHidden[hLayer];
+		}
+	}
+
+
+	//initializing output layer
+	{
+		size_t backIndex = weightHiddenLayerStartIndex.back();
+
+		size_t foo11 = numNPerHidden.size() - 1;
+		size_t foo12 = numNPerHidden.at(foo11);
+
+		size_t foo21 = numNPerHidden.size() - 2;
+		size_t foo22 = numNPerHidden.at(foo21);
+
+		size_t sizeOfLastLayer = foo12 * foo22;
+
+		weightOutputStartIndex =
+			backIndex
+			+ sizeOfLastLayer;
+	}
+	{
+		biasOutputStartIndex =
+			biasHiddenLayerStartIndex.back()
+			+ numNPerHidden.at(numNPerHidden.size() - 1);
+	}
+
+
+	size_t weightsSize = weightOutputStartIndex + numOutputs * weightHiddenLayerStartIndex.back();
+	size_t biasesSize = biasOutputStartIndex + numOutputs;
+
+	weights.resize(weightsSize);
+	biases.resize(biasesSize);
+	preActivation.resize(biasesSize);
+
+	for (size_t i = 0; i < weightsSize; ++i)
 	{
 		weights[i] = RNG::GetNumber();
 	}

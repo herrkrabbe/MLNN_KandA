@@ -15,14 +15,14 @@ namespace MLNN_KandA {
 		std::vector<double> weights;
 		std::vector<double> biases;
 
-		size_t numInputs;
-		size_t numOutputs;
+		const size_t numInputs;
+		const size_t numOutputs;
 		//int numHidden;		Instead use		=>	 numNPerHidden.size()
-		std::vector<size_t> numNPerHidden;
+		const std::vector<size_t> numNPerHidden;
 		#define numHidden numNPerHidden.size()
 
-		double learningRateOutput;
-		std::vector<double> learningRatePerHidden;
+		const double learningRateOutput;
+		const std::vector<double> learningRatePerHidden;
 
 		//Identical layer amount variant
 		ArtificialNN(size_t numberInput, size_t numberOutput,
@@ -36,6 +36,9 @@ namespace MLNN_KandA {
 			std::vector<Math::eActivationFunction> af_PerHiddenLayer, Math::eActivationFunction af_OutputLayer);
 
 		~ArtificialNN() = default;
+	private:
+		void Init();
+	public:
 
 		//Train method is to compute the output + update weight
 		std::vector<double> Train(std::vector<double> inputValues, std::vector<double> desiredOutput);
@@ -61,8 +64,8 @@ namespace MLNN_KandA {
 
 		std::vector<size_t> weightLayerSize;
 
-		std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
-		Math::eActivationFunction activationFunctionOutputLayer;
+		const std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
+		const Math::eActivationFunction activationFunctionOutputLayer;
 
 		std::vector<double> preActivation;
 
@@ -119,7 +122,7 @@ namespace MLNN_KandA {
 			return weightLayerSize.at(layerIndex);
 		}
 
-		inline size_t GetBiasLayerSize(size_t& layerIndex) const
+		size_t GetBiasLayerSize(size_t& layerIndex) const
 		{
 			if(layerIndex == numNPerHidden.size()) // output layer index
 			{
@@ -130,5 +133,7 @@ namespace MLNN_KandA {
 				return numNPerHidden.at(layerIndex);
 			}
 		}
+
+		
 	};
 }
