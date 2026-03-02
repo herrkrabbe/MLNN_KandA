@@ -45,6 +45,12 @@ ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput,
 
 void ArtificialNN::Init()
 {
+	/* The number of weights in each hidden layer and the output layer.
+	* Each index is the corresponding hidden layer's index
+	* The output layer is the .back() index
+	*/
+	std::vector<size_t> weightLayerSize;
+
 	//setup hidden layer start indices
 	{
 		weightLayerSize.resize(numHidden + 1); // resize to 1 index per layer + 1 for output
@@ -55,7 +61,7 @@ void ArtificialNN::Init()
 		for (size_t hLayer = 1; hLayer < numNPerHidden.size(); ++hLayer)
 		{
 			size_t prevIndex = hLayer - 1;
-			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex[prevIndex] + GetWeightLayerSize(prevIndex));
+			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex[prevIndex] + weightLayerSize.at(prevIndex));
 			biasHiddenLayerStartIndex.push_back(biasHiddenLayerStartIndex[prevIndex] + GetBiasLayerSize(prevIndex));
 			weightLayerSize[hLayer] = numNPerHidden[prevIndex] * numNPerHidden[hLayer];
 		}
@@ -65,7 +71,7 @@ void ArtificialNN::Init()
 	//initializing output layer
 	{
 		size_t backIndex = weightHiddenLayerStartIndex.back();
-		size_t sizeOfLastLayer = GetWeightLayerSize(numHidden-1);
+		size_t sizeOfLastLayer = weightLayerSize.at(numHidden-1);
 
 		weightOutputStartIndex =
 			backIndex
@@ -81,8 +87,8 @@ void ArtificialNN::Init()
 
 	//randomise initial weights and biases
 	{
-		size_t weightsSize = weightOutputStartIndex + numOutputs * numNPerHidden.back();
-		size_t biasesSize = biasOutputStartIndex + numOutputs;
+		size_t weightsSize = GetWeightOutputStartIndex() + numOutputs * numNPerHidden.back();
+		size_t biasesSize = GetBiasOutputStartIndex() + numOutputs;
 
 		weights.resize(weightsSize);
 		biases.resize(biasesSize);
@@ -188,9 +194,9 @@ std::vector<double> MLNN_KandA::ArtificialNN::CalcOutput(std::vector<double> con
 	for (size_t i = 0; i < numNPerHidden[0]; i++)
 	{
 		double tempSum = 0.0;
-		for (size_t inputVal = 0; inputVal < inputValues.size(); inputVal++)
+		for (size_t inputIndex = 0; inputIndex < inputValues.size(); inputIndex++)
 		{
-			tempSum += weights[inputVal + i * numInputs] * inputValues.at(inputVal);
+			tempSum += weights[inputIndex + i * numInputs] * inputValues.at(inputIndex);
 		}
 		tempSum += biases[i];
 
@@ -313,10 +319,10 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 	//First layer
 	for (size_t n = 0; n < numNPerHidden[0]; n++)
 	{
-		for (size_t inputVal = 0; inputVal < inputValues.size(); inputVal++)
+		for (size_t inputIndex = 0; inputIndex < inputValues.size(); inputIndex++)
 		{
-			size_t const weightIndex = inputVal + n * numInputs;
-			double const deltaWeight = learningRatePerHidden[0] * errorGradient[n] * inputValues[inputVal];
+			size_t const weightIndex = inputIndex + n * numInputs;
+			double const deltaWeight = learningRatePerHidden[0] * errorGradient[n] * inputValues[inputIndex];
 			weights[weightIndex] += deltaWeight;
 		}
 		biases[n] += learningRatePerHidden[0] * errorGradient[n];
@@ -332,28 +338,24 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 		for (size_t n = 0; n < numNPerHidden[l]; ++n)
 		{
 			//For each input, which means each previous neuron
-			size_t const fooIndex = l * neuronsInLayer + n;
-			double& errorGradientValue = errorGradient[fooIndex];
+			size_t const biasIndex = GetBiasHiddenLayerStartIndex(l) + n;
+			double& errorGradientValue = errorGradient[biasIndex];
 
 			for (size_t previousN = 0; previousN < numNeuronsPrevious; previousN++) {
-				//Jeg forstår ikke funksjonene dine, så jeg tror de er bugget/ikke komplett, bruker inntil videre hard logikk
-				//size_t weightOfPreviousN = GetWeightHiddenLayerStartIndex(l) + n * numNeuronsPrevious + previousN;
-				//size_t previousNeuronPreActivationIndex = GetBiasHiddenLayerStartIndex(l - 1) + previousN;
 
-				double& weightCurrent = weights[(numInputs * neuronsInLayer) + (l - 1) * neuronsInLayer * neuronsInLayer + n * neuronsInLayer + previousN];
-				double& preActivationValue = preActivation[(l - 1) * neuronsInLayer + previousN];
+				size_t const weightIndex = GetWeightHiddenLayerStartIndex(l) + previousN + n * numNeuronsPrevious;
 
-				weights[(numInputs * neuronsInLayer) + (l - 1) * neuronsInLayer * neuronsInLayer + n * neuronsInLayer + previousN]
-					= weightCurrent
-					+ learningRate
+				size_t const preActivationIndex = GetBiasHiddenLayerStartIndex(l - 1) + previousN;
+				double& preActivationValue = preActivation[preActivationIndex];
+
+				weights[weightIndex] +=
+					  learningRate
 					* errorGradientValue
 					* Math::ActivationFunction(activationFunctionHiddenLayer[0], preActivationValue);
 			}
-			double& biasCurrent = biases[numInputs + (l - 1) * neuronsInLayer + n];
 
-			biases[numInputs + (l - 1) * neuronsInLayer + n]
-				= biasCurrent
-				+ learningRate
+			biases[biasIndex] +=
+				  learningRate
 				* errorGradientValue;
 		}
 	}
@@ -367,8 +369,7 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 
 		for (size_t n = 0; n < numNPerHidden.back(); n++)
 		{
-			size_t const weightIndex = weightOutputStartIndex + o * numNPerHidden.back() + n;
-			
+			size_t const weightIndex = GetWeightOutputStartIndex() + o * numNPerHidden.back() + n;
 
 			size_t const preActivationIndex = GetBiasHiddenLayerStartIndex(finalLayerIndex) + n;
 			double const & preActivationValue = preActivation[preActivationIndex];
@@ -382,8 +383,8 @@ void MLNN_KandA::ArtificialNN::UpdateWeights(std::vector<double> const &inputVal
 		}
 		
 
-		biases[biasIndex]
-			+= learningRateOutput
+		biases[biasIndex] +=
+			  learningRateOutput
 			* errorGradientValue;
 	}
 }
