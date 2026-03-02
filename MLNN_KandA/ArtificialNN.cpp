@@ -96,11 +96,11 @@ void ArtificialNN::Init()
 
 		for (size_t i = 0; i < weightsSize; ++i)
 		{
-			weights[i] = 0.0; //RNG::GetNumber();
+			weights[i] = RNG::GetNumber();
 		}
 		for (size_t i = 0; i < biasesSize; ++i)
 		{
-			biases[i] = 0.0; //RNG::GetNumber();
+			biases[i] = RNG::GetNumber();
 		}
 	}
 }
