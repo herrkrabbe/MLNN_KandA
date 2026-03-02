@@ -59,6 +59,8 @@ namespace MLNN_KandA {
 		std::vector<size_t> biasHiddenLayerStartIndex;
 		size_t biasOutputStartIndex;
 
+		std::vector<size_t> weightLayerSize;
+
 		std::vector<Math::eActivationFunction> activationFunctionHiddenLayer;
 		Math::eActivationFunction activationFunctionOutputLayer;
 
@@ -105,6 +107,28 @@ namespace MLNN_KandA {
 		inline size_t GetBiasOutputStartIndex()
 		{
 			return biasOutputStartIndex;
+		}
+
+		/*
+		* Return the size of layer.
+		* if layerIndex == number of hidden layers, it will return the size of the
+		* output layer. That is because layersIndex is zero indexed
+		*/
+		inline size_t GetWeightLayerSize(size_t& layerIndex) const
+		{
+			return weightLayerSize.at(layerIndex);
+		}
+
+		inline size_t GetBiasLayerSize(size_t& layerIndex) const
+		{
+			if(layerIndex == numNPerHidden.size()) // output layer index
+			{
+				return numOutputs;
+			}
+			else
+			{
+				return numNPerHidden.at(layerIndex);
+			}
 		}
 	};
 }

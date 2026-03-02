@@ -11,40 +11,38 @@ using namespace	MLNN_KandA;
 ArtificialNN::ArtificialNN(size_t numberInput, size_t numberOutput, size_t numberHiddenLayer, size_t numberNeuronHiddenLayer,
                            double OutputLearningRate, double learningRate, Math::eActivationFunction af_HiddenLayer, Math::eActivationFunction af_OutputLayer)
 {
-	numInputs = numberInput;
-	numOutputs = numberOutput;
-	numNPerHidden = std::vector<size_t>(numberHiddenLayer, numberNeuronHiddenLayer);
+	// store values
+	{
+		numInputs = numberInput;
+		numOutputs = numberOutput;
+		numNPerHidden = std::vector<size_t>(numberHiddenLayer, numberNeuronHiddenLayer);
 
-	learningRateOutput = OutputLearningRate;
-	learningRatePerHidden = std::vector<double>(numberHiddenLayer, learningRate);
+		learningRateOutput = OutputLearningRate;
+		learningRatePerHidden = std::vector<double>(numberHiddenLayer, learningRate);
 
-	activationFunctionHiddenLayer = std::vector<Math::eActivationFunction>(numberHiddenLayer, af_HiddenLayer);
-	activationFunctionOutputLayer = af_OutputLayer;
+		activationFunctionHiddenLayer = std::vector<Math::eActivationFunction>(numberHiddenLayer, af_HiddenLayer);
+		activationFunctionOutputLayer = af_OutputLayer;
+	}
+	
 
 	//setup hidden layer start indices
-	for (size_t hLayer = 0; hLayer < numNPerHidden.size(); ++hLayer)
 	{
-		if (hLayer > 1)
+		weightLayerSize.resize(numHidden + 1); // resize to 1 index per layer + 1 for output
+
+		weightHiddenLayerStartIndex.push_back(0);
+		biasHiddenLayerStartIndex.push_back(0);
+		weightLayerSize[0] = numberInput * numNPerHidden.at(0);
+		for (size_t hLayer = 1; hLayer < numNPerHidden.size(); ++hLayer)
 		{
-			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex.at(hLayer - 1) + numNPerHidden.at(hLayer - 1) * numNPerHidden.at(hLayer - 2));
-			biasHiddenLayerStartIndex.push_back(biasHiddenLayerStartIndex.at(hLayer - 1) + numNPerHidden.at(hLayer - 1));
-		}
-		else if (hLayer == 1)
-		{
-			weightHiddenLayerStartIndex.push_back(numberInput * numNPerHidden.at(0));
-			biasHiddenLayerStartIndex.push_back(numNPerHidden.at(0));
-		}
-		else
-		{
-			weightHiddenLayerStartIndex.push_back(0);
-			biasHiddenLayerStartIndex.push_back(0);
+			size_t prevIndex = hLayer - 1;
+			weightHiddenLayerStartIndex.push_back(weightHiddenLayerStartIndex.at(prevIndex) + weightLayerSize[prevIndex]);
+			biasHiddenLayerStartIndex.push_back(biasHiddenLayerStartIndex.at(prevIndex) + GetBiasLayerSize(prevIndex));
+			weightLayerSize[hLayer] = numNPerHidden[prevIndex] * numNPerHidden[hLayer];
 		}
 	}
+	
 
 	//initializing output layer
-
-		//OLD kittel code. replaced with new more readable approach
-		// weightOutputStartIndex = numInputs * numberNeuronHiddenLayer + (numberHiddenLayer - 1) * numberNeuronHiddenLayer * numberNeuronHiddenLayer;
 	{
 		size_t backIndex = weightHiddenLayerStartIndex.back();
 
