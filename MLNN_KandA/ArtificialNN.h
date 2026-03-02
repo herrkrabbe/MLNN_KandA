@@ -75,16 +75,8 @@ namespace MLNN_KandA {
 		//first hidden layer is layer = 0
 
 		// zero indexed
-		size_t GetWeightHiddenLayerStartIndex(size_t layerIndex)
+		size_t GetWeightHiddenLayerStartIndex(size_t const& layerIndex)
 		{
-			if (layerIndex <= 0)
-			{
-				return 0;
-			}
-			if (layerIndex > weightHiddenLayerStartIndex.size() - 1)
-			{
-				layerIndex = weightHiddenLayerStartIndex.size() - 1;
-			}
 			return weightHiddenLayerStartIndex.at(layerIndex);
 		}
 
@@ -94,16 +86,8 @@ namespace MLNN_KandA {
 		}
 
 		//zero indexed
-		size_t GetBiasHiddenLayerStartIndex(size_t layerIndex)
+		inline size_t GetBiasHiddenLayerStartIndex(size_t const & layerIndex)
 		{
-			if (layerIndex <= 0)
-			{
-				return 0;
-			}
-			if (layerIndex > biasHiddenLayerStartIndex.size() - 1)
-			{
-				layerIndex = biasHiddenLayerStartIndex.size() - 1;
-			}
 			return biasHiddenLayerStartIndex.at(layerIndex);
 		}
 
@@ -117,12 +101,12 @@ namespace MLNN_KandA {
 		* if layerIndex == number of hidden layers, it will return the size of the
 		* output layer. That is because layersIndex is zero indexed
 		*/
-		inline size_t GetWeightLayerSize(size_t& layerIndex) const
+		inline size_t GetWeightLayerSize(size_t const& layerIndex) const
 		{
 			return weightLayerSize.at(layerIndex);
 		}
 
-		size_t GetBiasLayerSize(size_t& layerIndex) const
+		size_t GetBiasLayerSize(size_t const& layerIndex) const
 		{
 			if(layerIndex == numNPerHidden.size()) // output layer index
 			{
