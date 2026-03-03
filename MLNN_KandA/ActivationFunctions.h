@@ -13,6 +13,7 @@ namespace Math
 		, Sigmoid = 2
 		, ReLu = 3
 		, LeakyReLU = 4
+		, TanH = 5
 	};
 
 	namespace funcs
@@ -25,9 +26,9 @@ namespace Math
 		{
 			return x >= 0.0;
 		}
-		inline double ActivationSigmoid(double const & x)
+		inline double ActivationSigmoid(double const& x)
 		{
-			return 1.0/(1.0 + std::exp(-x));
+			return 1.0 / (1.0 + std::exp(-x));
 		}
 		inline double ActivationReLU(double const& x)
 		{
@@ -35,7 +36,11 @@ namespace Math
 		}
 		inline double ActivationLeakyReLU(double const& x)
 		{
-			return (x >= 0.0) ? x : 0.01*x;
+			return (x >= 0.0) ? x : 0.01 * x;
+		}
+		inline double ActivationTanH(double const& x)
+		{
+			return std::tanh(x);
 		}
 		inline double DerivedIdentity(double const& x)
 		{
@@ -57,6 +62,11 @@ namespace Math
 		inline double DerivedLeakyReLU(double const& x)
 		{
 			return (x > 0) ? 1.0 : 0.01;
+		}
+		inline double DerivedTanH(double const& x)
+		{
+			double g = ActivationTanH(x);
+			return 1.0 - pow(g, 2);
 		}
 	}
 	

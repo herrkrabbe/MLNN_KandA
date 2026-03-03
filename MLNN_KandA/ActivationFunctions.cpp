@@ -20,9 +20,11 @@ double MLNN_KandA::Math::ActivationFunction(eActivationFunction const& f, double
 	case eActivationFunction::LeakyReLU:
 		return funcs::ActivationLeakyReLU(x);
 		break;
+	case eActivationFunction::TanH:
+		return funcs::ActivationTanH(x);
+		break;
 	default:
 		throw("Activation function lacks an implementation");
-		return 0.0;
 	}
 
 }
@@ -45,9 +47,11 @@ double MLNN_KandA::Math::DerivedFunction(eActivationFunction const& f, double co
 	case eActivationFunction::LeakyReLU:
 		return funcs::DerivedLeakyReLU(x);
 		break;
+	case eActivationFunction::TanH:
+		return funcs::DerivedTanH(x);
+		break;
 	default:
 		throw("Derived activation function lacks an implementation for value");
-		return 0.0;
 	}
 
 }
