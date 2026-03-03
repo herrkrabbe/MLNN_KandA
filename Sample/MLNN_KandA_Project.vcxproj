@@ -22,7 +22,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{de78ac94-58db-4645-90b6-ed05796ef7c3}</ProjectGuid>
-    <RootNamespace>MLPLibraryProject</RootNamespace>
+    <RootNamespace>MLNN_KandAProject</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>MLNN_KandA</ProjectName>
   </PropertyGroup>
