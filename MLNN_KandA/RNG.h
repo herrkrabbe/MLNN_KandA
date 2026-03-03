@@ -14,7 +14,8 @@
 //}
 
 
-namespace RNG{
+namespace MLNN_KandA{
+	namespace RNG{
 	//class RNG {
 	//	bool isSeeded{false};
 	//	std::mt19937 gen;         // Mersenne Twister engine
@@ -59,5 +60,5 @@ namespace RNG{
 		return vec;
 	}
 }
-
+}
 
