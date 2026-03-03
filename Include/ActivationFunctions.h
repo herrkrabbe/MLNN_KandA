@@ -14,6 +14,7 @@ namespace Math
 		, ReLu = 3
 		, LeakyReLU = 4
 		, TanH = 5
+		, Sinusoid = 6
 	};
 
 	namespace funcs
@@ -42,6 +43,10 @@ namespace Math
 		{
 			return std::tanh(x);
 		}
+		inline double ActivationSinusoid(double const& x)
+		{
+			return sin(x);
+		}
 		inline double DerivedIdentity(double const& x)
 		{
 			return 1.0;
@@ -67,6 +72,10 @@ namespace Math
 		{
 			double g = ActivationTanH(x);
 			return 1.0 - pow(g, 2);
+		}
+		inline double DerivedSinusoid(double const& x)
+		{
+			return cos(x);
 		}
 	}
 	

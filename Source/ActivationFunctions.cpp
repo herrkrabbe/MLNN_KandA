@@ -23,6 +23,8 @@ double MLNN_KandA::Math::ActivationFunction(eActivationFunction const& f, double
 	case eActivationFunction::TanH:
 		return funcs::ActivationTanH(x);
 		break;
+	case eActivationFunction::Sinusoid:
+		return funcs::ActivationSinusoid(x);
 	default:
 		throw("Activation function lacks an implementation");
 	}
@@ -49,6 +51,9 @@ double MLNN_KandA::Math::DerivedFunction(eActivationFunction const& f, double co
 		break;
 	case eActivationFunction::TanH:
 		return funcs::DerivedTanH(x);
+		break;
+	case eActivationFunction::Sinusoid:
+		return funcs::DerivedSinusoid(x);
 		break;
 	default:
 		throw("Derived activation function lacks an implementation for value");
