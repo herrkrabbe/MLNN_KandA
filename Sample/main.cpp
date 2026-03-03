@@ -1,7 +1,7 @@
 #include <iostream>
-#include "MLNN_KandA/RNG.h"
-#include "MLNN_KandA/ActivationFunctions.h"
-#include "MLNN_KandA/ArtificialNN.h"
+#include "RNG.h"
+#include "ActivationFunctions.h"
+#include "ArtificialNN.h"
 #include <string>
 #include <sstream>
 
