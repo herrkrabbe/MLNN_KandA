@@ -40,6 +40,24 @@ namespace RNG{
 	{
 		return dist(gen);
 	}
+
+	template<typename T>
+	std::vector<T> ShuffleVector(std::vector<T>& vec)
+	{
+		size_t currentIndex = vec.size() - 1;
+		while (currentIndex > 1)
+		{
+			size_t randIndex = size_t(round((GetNumber() + 1.0) * 0.5 * double(currentIndex)));
+			if (randIndex != currentIndex)
+			{
+				T temp = std::move(vec[currentIndex]);
+				vec[currentIndex] = std::move(vec[randIndex]);
+				vec[randIndex] = std::move(temp);
+			}
+			--currentIndex;
+		}
+		return vec;
+	}
 }
 
 
