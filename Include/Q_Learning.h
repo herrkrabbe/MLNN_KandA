@@ -4,6 +4,7 @@
 #include <vector>
 #include <numeric>
 #include <algorithm>
+#include <cmath>
 
 namespace MLNN_KandA
 {
@@ -37,13 +38,19 @@ private:
 public:
 	Q_Learning(int mCapacity, float discount, std::shared_ptr<ArtificialNN> ann);
 
-	static std::vector<double>& SoftMax(std::vector<double>& values)
+	static std::vector<double> SoftMax(std::vector<double> values, double temperature = 1.0)
 	{
-		double sum = std::accumulate(values.begin(), values.end(), 0.0);
-		if(sum != 0.0)
+		if(temperature != 0.0)
 		{
+			temperature = abs(temperature);
+			double maxValue = *std::max_element(values.begin(), values.end());
+
 			std::for_each(values.begin(), values.end(),
-				[&sum](double& n) { n/=sum; }
+				[&maxValue, &temperature](double& n) { n = exp(n - maxValue); }
+			);
+			double exponentialSum = std::accumulate(values.begin(), values.end(), 0.0);
+			std::for_each(values.begin(), values.end(),
+				[exponentialSum](double& n) { n /= exponentialSum; }
 			);
 		}
 		return values;

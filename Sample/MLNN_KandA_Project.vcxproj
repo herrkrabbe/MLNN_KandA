@@ -120,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\Q_Learning.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\Source\ActivationFunctions.cpp" />
     <ClCompile Include="..\Source\ArtificialNN.cpp" />
@@ -127,6 +128,7 @@
   <ItemGroup>
     <ClInclude Include="..\Include\ActivationFunctions.h" />
     <ClInclude Include="..\Include\ArtificialNN.h" />
+    <ClInclude Include="..\Include\Q_Learning.h" />
     <ClInclude Include="..\Include\RNG.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -18,21 +18,27 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MLNN_KandA\ArtificialNN.cpp">
+    <ClCompile Include="..\Source\ActivationFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MLNN_KandA\ActivationFunctions.cpp">
+    <ClCompile Include="..\Source\ArtificialNN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Q_Learning.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MLNN_KandA\RNG.h">
+    <ClInclude Include="..\Include\ActivationFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MLNN_KandA\ActivationFunctions.h">
+    <ClInclude Include="..\Include\ArtificialNN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MLNN_KandA\ArtificialNN.h">
+    <ClInclude Include="..\Include\RNG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Q_Learning.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
