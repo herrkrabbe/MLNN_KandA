@@ -16,9 +16,10 @@ public:
 	double reward;
 
 	Replay(std::vector<double> inputs, double r)
+		:
+		states(inputs),
+		reward(r)
 	{
-		states = inputs;
-		reward = r;
 	}
 };
 
@@ -27,14 +28,16 @@ class Q_Learning
 private:
 	std::vector<std::unique_ptr<Replay>> replayMemory;			//memory - list of past actions and rewards
 
-	float discount = 0.99f;							//how much future states affect rewards
+	double discount = 0.99;							//how much future states affect rewards
 
 	std::shared_ptr<ArtificialNN> ann;
 
 	size_t currentMemoryIndex = 0;
 
+	double randomMoveChance = 0.5; // epsilon
+
 public:
-	Q_Learning(size_t _mCapacity, float _discount, std::shared_ptr<ArtificialNN> _ann);
+	Q_Learning(size_t _mCapacity, double _discount, std::shared_ptr<ArtificialNN> _ann);
 
 	static std::vector<double> SoftMax(std::vector<double> values, double temperature = 1.0)
 	{
