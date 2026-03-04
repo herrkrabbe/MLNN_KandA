@@ -2,11 +2,10 @@
 
 MLNN_KandA::Q_Learning::Q_Learning(size_t _mCapacity, float _discount, std::shared_ptr<ArtificialNN> _ann)
 	:
-	mCapacity(_mCapacity),
 	discount(_discount),
 	ann(_ann)
 {
-	replayMemory.resize(mCapacity);
+	replayMemory.resize(_mCapacity);
 }
 
 void MLNN_KandA::Q_Learning::AddReplayMemory(std::vector<double> states, double reward)

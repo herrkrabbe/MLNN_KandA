@@ -25,8 +25,6 @@ public:
 class Q_Learning
 {
 private:
-
-	size_t mCapacity = 10000;							//memory capacity
 	std::vector<std::shared_ptr<Replay>> replayMemory;			//memory - list of past actions and rewards
 
 	float discount = 0.99f;							//how much future states affect rewards
