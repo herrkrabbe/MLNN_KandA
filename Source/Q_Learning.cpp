@@ -11,9 +11,9 @@ MLNN_KandA::Q_Learning::Q_Learning(size_t _mCapacity, double _discount, std::sha
 void MLNN_KandA::Q_Learning::AddReplayMemory(std::vector<double> const& states, double const& reward)
 {
 	if(states.size() == 0) return;
-	if(currentMemoryIndex >= replayMemory.size())
+	if(currentMemoryIndex == size_t(0)-1)
 	{
-		currentMemoryIndex = 0;
+		return;
 	}
 
 	replayMemory[currentMemoryIndex] = std::make_unique<Replay>(states, reward);
