@@ -2,6 +2,8 @@
 #include "ArtificialNN.h"
 #include <memory>
 #include <vector>
+#include <numeric>
+#include <algorithm>
 
 namespace MLNN_KandA
 {
@@ -35,7 +37,17 @@ private:
 public:
 	Q_Learning(int mCapacity, float discount, std::shared_ptr<ArtificialNN> ann);
 
-	static std::vector<double> SoftMax(std::vector<double> values);
+	static std::vector<double>& SoftMax(std::vector<double>& values)
+	{
+		double sum = std::accumulate(values.begin(), values.end(), 0.0);
+		if(sum != 0.0)
+		{
+			std::for_each(values.begin(), values.end(),
+				[&sum](double& n) { n/=sum; }
+			);
+		}
+		return values;
+	};
 
 	void AddReplayMemory(std::vector<double> states, double reward);
 
