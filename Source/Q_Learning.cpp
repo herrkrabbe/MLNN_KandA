@@ -8,7 +8,7 @@ MLNN_KandA::Q_Learning::Q_Learning(size_t _mCapacity, float _discount, std::shar
 	replayMemory.resize(_mCapacity);
 }
 
-void MLNN_KandA::Q_Learning::AddReplayMemory(std::vector<double> states, double reward)
+void MLNN_KandA::Q_Learning::AddReplayMemory(std::vector<double> const& states, double const& reward)
 {
 	if(states.size() == 0) return;
 	if(currentMemoryIndex >= replayMemory.size())
@@ -16,7 +16,7 @@ void MLNN_KandA::Q_Learning::AddReplayMemory(std::vector<double> states, double 
 		currentMemoryIndex = 0;
 	}
 
-	replayMemory[currentMemoryIndex] = std::make_shared<Replay>(states, reward);
+	replayMemory[currentMemoryIndex] = std::make_unique<Replay>(states, reward);
 
 	++currentMemoryIndex;
 }

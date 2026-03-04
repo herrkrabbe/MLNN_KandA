@@ -25,7 +25,7 @@ public:
 class Q_Learning
 {
 private:
-	std::vector<std::shared_ptr<Replay>> replayMemory;			//memory - list of past actions and rewards
+	std::vector<std::unique_ptr<Replay>> replayMemory;			//memory - list of past actions and rewards
 
 	float discount = 0.99f;							//how much future states affect rewards
 
@@ -54,7 +54,7 @@ public:
 		return values;
 	};
 
-	void AddReplayMemory(std::vector<double> states, double reward);
+	void AddReplayMemory(std::vector<double> const & states, double const & reward);
 
 	void ProcessQLearningWithTrainANN();
 
